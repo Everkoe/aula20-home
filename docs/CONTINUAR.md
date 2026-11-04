@@ -1,6 +1,6 @@
 # Cómo continuar el proyecto (traspaso entre sesiones)
 
-Última actualización: 2026-11-04. Sin repositorio git todavía (nada commiteado) y sin desplegar.
+Última actualización: 2026-11-04. Repositorio privado en GitHub: https://github.com/Everkoe/aula20-home (rama `main`). Sin desplegar: el usuario lo conectará a Vercel.
 
 ## 1. Contexto en 30 segundos
 
