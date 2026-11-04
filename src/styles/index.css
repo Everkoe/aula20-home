@@ -1,0 +1,463 @@
+@import 'tailwindcss';
+
+/* Modo oscuro por atributo (lo pone index.html antes del primer pintado y lo cambia <ThemeToggle>). */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/*
+ * Tokens de marca Aula 20: azul + menta (cian), los mismos del logo y del CSS del sitio
+ * actual (escalas `aula20-*` y `secondary-*` de aula20.edu.pe). Úsalos siempre a través de
+ * las clases de Tailwind (bg-tinta, text-aula, font-display, etc.); no escribas colores fijos.
+ *
+ *  aula      #002cff  aula20-600 (azul del logo)    menta      #21dfaf  secondary-500 (el "20")
+ *  aula-700  #0022c7  aula20-700                    menta-300  #68e9c9  secondary-300
+ *  aula-50   #e0e6ff  aula20-50                     tinta      #000a3b  aula20-950
+ *  cielo     #ccd5ff  aula20-100
+ *
+ * Contraste (WCAG):
+ *  - aula sobre blanco 7.5:1 · sobre papel 7.0:1 → texto de cualquier tamaño y botones.
+ *  - grafito sobre papel 16.1:1 · grafito-600 sobre papel 7.3:1 → texto secundario.
+ *  - blanco sobre tinta 19.0:1 · cielo sobre tinta 13.1:1 · menta sobre tinta 11.1:1.
+ *  - blanco sobre aula 7.5:1 · cielo sobre aula 5.2:1 → texto normal sobre azul.
+ *  - menta sobre aula 4.4:1 → solo texto grande, íconos y bordes. Nunca texto chico.
+ *  - tinta sobre menta 11.1:1 → botón principal. Blanco sobre menta (1.7:1) no.
+ *  - tinta sobre menta-300 12.7:1 · aula sobre menta-300 5.0:1 → resaltador de títulos.
+ *
+ * Fijos en los dos temas: aula, aula-700, menta, menta-300, tinta, cielo (marca y secciones oscuras).
+ * Cambian con el tema (superficies): papel, hoja, titulo, grafito, grafito-600, linea, acento, aula-50.
+ * En las superficies usa estos últimos (bg-hoja, text-titulo, text-acento), no bg-white / text-tinta / text-aula.
+ */
+@theme {
+  --color-aula: #002cff;
+  --color-aula-700: #0022c7;
+  --color-tinta: #000a3b;
+  --color-menta: #21dfaf;
+  --color-menta-300: #68e9c9;
+  --color-cielo: #ccd5ff;
+
+  --color-papel: #f6f7fb;
+  --color-hoja: #ffffff;
+  --color-titulo: #000a3b;
+  --color-grafito: #151a2c;
+  --color-grafito-600: #4b5268;
+  --color-linea: #dde2f0;
+  --color-acento: #002cff;
+  --color-aula-50: #e0e6ff;
+
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+
+  --ease-suave: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Entradas cortas, sin rebotes y siempre desactivables (prefers-reduced-motion). */
+  --animate-rise: rise 0.8s var(--ease-suave) both;
+  /* Solo desplazamiento, sin opacidad: para el H1 (no retrasa el LCP). */
+  --animate-settle: settle 0.9s var(--ease-suave) both;
+  --animate-pulse-dot: pulse-dot 2.4s ease-out infinite;
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @keyframes settle {
+    from {
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes pulse-dot {
+    0% {
+      box-shadow: 0 0 0 0 rgb(33 223 175 / 0.6);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 10px rgb(33 223 175 / 0);
+    }
+  }
+}
+
+/*
+ * Modo oscuro: el azul noche de la marca (tinta, aula20-950) como página y aula20-900 como hoja.
+ * Contraste: grafito 15.3:1 · grafito-600 9.4:1 · acento 6.6:1 sobre papel; sobre hoja 14.0 / 8.7 / 6.1.
+ */
+@layer base {
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    --color-papel: #000a3b;
+    --color-hoja: #000f57;
+    --color-titulo: #ffffff;
+    --color-grafito: #e0e6ff;
+    --color-grafito-600: #a3b3ff;
+    --color-linea: #24316e;
+    --color-acento: #7a91ff;
+    --color-aula-50: #00198f;
+  }
+
+  /*
+   * En oscuro se apaga la sala, no el papel: la cartilla, la ficha del ciclo y la foto pegada de la
+   * portada siguen siendo hojas claras. Mismos valores que @theme.
+   */
+  .hoja-clara {
+    --color-papel: #f6f7fb;
+    --color-hoja: #ffffff;
+    --color-titulo: #000a3b;
+    --color-grafito: #151a2c;
+    --color-grafito-600: #4b5268;
+    --color-linea: #dde2f0;
+    --color-acento: #002cff;
+    --color-aula-50: #e0e6ff;
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    @apply bg-papel font-sans text-grafito antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-aula;
+  }
+
+  /* Sobre azul o tinta el contorno azul no se ve: pasa a menta (4.4:1 sobre aula, 11.1:1 sobre tinta). */
+  :where(header, footer, .cuadricula-oscura, .cuadricula-azul, .cuadricula-marca) :focus-visible {
+    @apply outline-menta;
+  }
+
+  :where(.cuadricula-oscura, .cuadricula-azul, .cuadricula-marca) :where(.bg-hoja) :focus-visible {
+    @apply outline-aula;
+  }
+
+  /* En modo oscuro las superficies son azul noche: menta, salvo en las hojas que siguen claras. */
+  :root[data-theme='dark'] :focus-visible {
+    @apply outline-menta;
+  }
+
+  :root[data-theme='dark'] .hoja-clara :focus-visible {
+    @apply outline-aula;
+  }
+
+  /* La franja es menta en los dos modos: contorno tinta (11.1:1). */
+  :root .marquee-host :focus-visible {
+    @apply outline-tinta;
+  }
+
+  ::selection {
+    @apply bg-menta text-tinta;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Cuadrícula de cuaderno: fondo de las secciones. Muy sutil para no competir con el texto.
+ * `cuadricula-marca` (portada y cierre) es azul en modo claro y azul noche con brillo en oscuro.
+ * ------------------------------------------------------------------------- */
+.cuadricula-oscura,
+:root[data-theme='dark'] .cuadricula-marca {
+  background-color: var(--color-tinta);
+  background-image:
+    radial-gradient(56rem 32rem at 88% -12%, color-mix(in srgb, var(--color-aula) 55%, transparent), transparent 62%),
+    linear-gradient(color-mix(in srgb, white 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, white 5%, transparent) 1px, transparent 1px);
+  background-size:
+    auto,
+    32px 32px,
+    32px 32px;
+}
+
+.cuadricula-azul,
+.cuadricula-marca {
+  background-color: var(--color-aula);
+  background-image:
+    radial-gradient(48rem 28rem at 10% 120%, color-mix(in srgb, var(--color-tinta) 55%, transparent), transparent 65%),
+    linear-gradient(color-mix(in srgb, white 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, white 8%, transparent) 1px, transparent 1px);
+  background-size:
+    auto,
+    32px 32px,
+    32px 32px;
+}
+
+.cuadricula-clara {
+  background-color: var(--color-papel);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-acento) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-acento) 7%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Resaltador: barra menta detrás de la parte baja de la palabra (solo sobre fondos claros).
+ * Se "pasa" de izquierda a derecha cuando el título entra en pantalla.
+ * ------------------------------------------------------------------------- */
+.resaltado {
+  background-image: linear-gradient(
+    100deg,
+    transparent 0.2em,
+    var(--color-menta-300) 0.2em,
+    var(--color-menta-300) calc(100% - 0.1em),
+    transparent calc(100% - 0.1em)
+  );
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.45em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-size 0.9s var(--ease-suave) 0.25s;
+}
+
+[data-reveal='pending'] .resaltado {
+  background-size: 0% 0.45em;
+}
+
+/*
+ * Sobre azul o tinta: palabra en menta (como el "20" del logo) con un trazo de plumón debajo.
+ * En modo oscuro el resaltador hace lo mismo: blanco sobre menta-300 no se lee (1.5:1) y una
+ * barra tenue se ve borrosa. Por eso <Highlight> siempre trae el trazo y aquí se decide cuál se ve.
+ */
+.trazo,
+:root[data-theme='dark'] .resaltado {
+  position: relative;
+  color: var(--color-menta);
+  white-space: nowrap;
+  background-image: none;
+}
+
+.resaltado svg {
+  display: none;
+}
+
+:root[data-theme='dark'] .resaltado svg {
+  display: block;
+}
+
+/*
+ * El trazo se "dibuja" destapándolo de izquierda a derecha con clip-path. No se usa stroke-dasharray:
+ * con vector-effect: non-scaling-stroke, Chrome mide el guion en píxeles e ignora pathLength (sale punteado).
+ */
+.trazo svg,
+.resaltado svg {
+  position: absolute;
+  left: 0;
+  bottom: -0.18em;
+  width: 100%;
+  height: 0.32em;
+  overflow: visible;
+  clip-path: inset(-50% 0 -50% 0);
+  transition: clip-path 0.9s var(--ease-suave) 0.35s;
+}
+
+[data-reveal='pending'] .trazo svg,
+[data-reveal='pending'] .resaltado svg {
+  clip-path: inset(-50% 100% -50% 0);
+}
+
+.animate-trazo svg {
+  animation: trazo 1s var(--ease-suave) 0.45s both;
+}
+
+@keyframes trazo {
+  from {
+    clip-path: inset(-50% 100% -50% 0);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Cartilla óptica: óvalo que se rellena "a lápiz" de izquierda a derecha al marcarlo.
+ * ------------------------------------------------------------------------- */
+.ovalo {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 1.6rem;
+  border-radius: 9999px;
+  border: 2px solid currentColor;
+  overflow: hidden;
+  transition:
+    border-color 0.3s var(--ease-suave),
+    transform 0.3s var(--ease-suave);
+}
+
+.ovalo::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: inherit;
+  background-color: var(--color-titulo);
+  background-image: repeating-linear-gradient(
+    115deg,
+    color-mix(in srgb, white 9%, transparent) 0 1px,
+    transparent 1px 4px
+  );
+  clip-path: inset(0 100% 0 0 round 9999px);
+  transition: clip-path 0.45s var(--ease-suave);
+}
+
+input:checked + .ovalo::after {
+  clip-path: inset(0 0 0 0 round 9999px);
+}
+
+input:checked + .ovalo {
+  transform: rotate(-3deg);
+}
+
+label:hover > .ovalo {
+  border-color: var(--color-acento);
+}
+
+input:focus-visible + .ovalo {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------------------
+ * Aparición al hacer scroll (componente <Reveal>). El contenido es visible si
+ * JavaScript aún no marcó el elemento: solo se oculta cuando [data-reveal="pending"].
+ * ------------------------------------------------------------------------- */
+[data-reveal] {
+  transition:
+    opacity 0.8s var(--ease-suave),
+    transform 0.8s var(--ease-suave);
+  transition-delay: calc(var(--reveal-index, 0) * 90ms);
+}
+
+[data-reveal='pending'] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+/* ---------------------------------------------------------------------------
+ * Franja de universidades en movimiento lento. Se detiene con el botón de pausa,
+ * al pasar el cursor o al enfocar un nombre con teclado (no con el clic, que
+ * deja el foco puesto). Con "reducir movimiento" queda estática y con ajuste de línea.
+ * ------------------------------------------------------------------------- */
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+
+.marquee:hover,
+.marquee:has(:focus-visible),
+.marquee[data-paused='true'] {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Tarjetas que se elevan al pasar el cursor. */
+.lift {
+  transition:
+    transform 0.5s var(--ease-suave),
+    box-shadow 0.5s var(--ease-suave),
+    border-color 0.5s var(--ease-suave);
+}
+
+.lift:hover {
+  transform: translateY(-6px);
+  border-color: color-mix(in srgb, var(--color-acento) 45%, transparent);
+  box-shadow: 0 24px 40px -24px rgb(0 10 59 / 0.35);
+}
+
+/* Recorrido lateral con scroll nativo: se ajusta a cada tarjeta y oculta la barra. */
+.snap-row {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.snap-row::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-row > * {
+  scroll-snap-align: start;
+}
+
+/* Menú móvil desplegable: altura animada con grid y sin foco cuando está cerrado. */
+.disclosure {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows 0.35s var(--ease-suave),
+    visibility 0s linear 0.35s;
+}
+
+.disclosure[data-open='true'] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition:
+    grid-template-rows 0.35s var(--ease-suave),
+    visibility 0s;
+}
+
+.disclosure > * {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal='pending'] {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-reveal='pending'] .resaltado {
+    background-size: 100% 0.45em;
+  }
+
+  [data-reveal='pending'] .trazo svg,
+  [data-reveal='pending'] .resaltado svg {
+    clip-path: inset(-50% 0 -50% 0);
+  }
+
+  .marquee {
+    width: auto;
+    flex-wrap: wrap;
+    animation: none !important;
+  }
+
+  .marquee [aria-hidden='true'] {
+    display: none;
+  }
+
+  .lift:hover,
+  input:checked + .ovalo {
+    transform: none;
+  }
+}
