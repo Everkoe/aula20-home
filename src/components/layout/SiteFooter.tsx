@@ -27,7 +27,7 @@ const columns: { title: string; links: FooterLink[] }[] = [
     title: 'Contacto',
     links: [
       { label: `WhatsApp ${formatPhone(site.contact.phone)}`, href: buildWhatsAppLink(site.contact.phone, site.whatsappMessages.info), isExternal: true },
-      { label: 'Intranet de alumnos', href: site.links.intranet, isExternal: true },
+      { label: 'Intranet de alumnos', href: site.links.intranet },
       ...site.social.map((s) => ({ label: s.label, href: s.href, isExternal: true })),
     ],
   },

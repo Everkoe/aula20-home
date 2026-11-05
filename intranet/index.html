@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/png" href="https://aula20.edu.pe/favicon-32x32.png" />
+    <meta name="theme-color" content="#000a3b" data-fixed />
+    <!-- robots y description: los agrega vite.config.ts desde src/lib/headTags.ts -->
+    <title>Intranet · Aula 20</title>
+    <script>
+      // Tema antes del primer pintado. Mismo código que index.html (regla de resolveTheme en src/lib/theme.ts).
+      // La barra del navegador va en tinta en los dos temas: es el color de la barra lateral.
+      ;(() => {
+        let stored = null
+        try {
+          stored = localStorage.getItem('aula20-tema')
+        } catch {}
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.dataset.theme = stored === 'light' || stored === 'dark' ? stored : prefersDark ? 'dark' : 'light'
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/intranet/main.tsx"></script>
+  </body>
+</html>

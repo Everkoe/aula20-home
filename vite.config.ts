@@ -1,16 +1,21 @@
+import { fileURLToPath } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
-import { defineConfig, type Plugin } from 'vite'
-import { buildHeadTags } from './src/lib/headTags.ts'
+import { defineConfig, type Connect, type Plugin } from 'vite'
+import { buildHeadTags, buildIntranetHeadTags } from './src/lib/headTags.ts'
 
 /** Fuentes del primer pantallazo (texto y titulares, solo latín). */
 const ABOVE_THE_FOLD_FONTS = ['manrope-latin-wght-normal', 'bricolage-grotesque-latin-wght-normal']
+const INTRANET_HTML = /[\\/]intranet[\\/]index\.html$/
+/** Rutas de la intranet sin extensión (/intranet, /intranet/clases…): las resuelve react-router. */
+const INTRANET_ROUTE = /^\/intranet(\/[^.]*)?$/
 
-/** Vista previa para redes, schema.org y precarga de la foto principal (ver src/lib/headTags.ts). */
+/** Vista previa para redes, schema.org y precarga de la foto en la landing; noindex en la intranet (ver src/lib/headTags.ts). */
 function headTags(): Plugin {
   return {
     name: 'aula20-head-tags',
-    transformIndexHtml: () => buildHeadTags().map((tag) => ({ ...tag, injectTo: 'head' as const })),
+    transformIndexHtml: (_html, { filename }) =>
+      (INTRANET_HTML.test(filename) ? buildIntranetHeadTags() : buildHeadTags()).map((tag) => ({ ...tag, injectTo: 'head' as const })),
   }
 }
 
@@ -40,7 +45,35 @@ function fontPreloads(): Plugin {
   }
 }
 
+/**
+ * En desarrollo y en `vite preview`, un enlace directo a /intranet/clases debe servir la intranet y no la landing
+ * (el respaldo de Vite manda todo a /index.html). En Vercel lo hace la reescritura de vercel.json.
+ */
+function intranetFallback(): Plugin {
+  const rewrite: Connect.NextHandleFunction = (req, _res, next) => {
+    if (req.url && INTRANET_ROUTE.test(req.url.split('?')[0] ?? '')) req.url = '/intranet/index.html'
+    next()
+  }
+  return {
+    name: 'aula20-intranet-fallback',
+    configureServer: (server) => {
+      server.middlewares.use(rewrite)
+    },
+    configurePreviewServer: (server) => {
+      server.middlewares.use(rewrite)
+    },
+  }
+}
+
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(), headTags(), fontPreloads()],
+  plugins: [react(), tailwindcss(), headTags(), fontPreloads(), intranetFallback()],
+  build: {
+    rolldownOptions: {
+      input: {
+        landing: fileURLToPath(new URL('./index.html', import.meta.url)),
+        intranet: fileURLToPath(new URL('./intranet/index.html', import.meta.url)),
+      },
+    },
+  },
 })

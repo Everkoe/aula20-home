@@ -29,7 +29,8 @@ export const site = {
     info: '¡Hola! Quiero más información. Vengo desde la web.',
   },
   links: {
-    intranet: 'https://intranet.aula20.edu.pe/',
+    /** Nuestra intranet de demostración (src/intranet/). La real es https://intranet.aula20.edu.pe/. */
+    intranet: '/intranet/',
     ciclos: `${SITE}/ciclos`,
     cachimbos: `${SITE}/cachimbos`,
     docentes: `${SITE}/docentes`,

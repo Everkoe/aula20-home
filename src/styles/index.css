@@ -139,7 +139,8 @@
   }
 
   /* Sobre azul o tinta el contorno azul no se ve: pasa a menta (4.4:1 sobre aula, 11.1:1 sobre tinta). */
-  :where(header, footer, .cuadricula-oscura, .cuadricula-azul, .cuadricula-marca) :focus-visible {
+  /* .sala: superficies tinta sin cuadrícula (barra inferior de la intranet). */
+  :where(header, footer, .sala, .cuadricula-oscura, .cuadricula-azul, .cuadricula-marca) :focus-visible {
     @apply outline-menta;
   }
 
@@ -232,9 +233,10 @@
  * Sobre azul o tinta: palabra en menta (como el "20" del logo) con un trazo de plumón debajo.
  * En modo oscuro el resaltador hace lo mismo: blanco sobre menta-300 no se lee (1.5:1) y una
  * barra tenue se ve borrosa. Por eso <Highlight> siempre trae el trazo y aquí se decide cuál se ve.
+ * Dentro de una hoja que sigue clara (.hoja-clara) el resaltador se queda como en modo claro.
  */
 .trazo,
-:root[data-theme='dark'] .resaltado {
+:root[data-theme='dark'] .resaltado:not(.hoja-clara *) {
   position: relative;
   color: var(--color-menta);
   white-space: nowrap;
@@ -245,7 +247,7 @@
   display: none;
 }
 
-:root[data-theme='dark'] .resaltado svg {
+:root[data-theme='dark'] .resaltado:not(.hoja-clara *) svg {
   display: block;
 }
 

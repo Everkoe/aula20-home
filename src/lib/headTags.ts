@@ -59,6 +59,11 @@ export function serializeJsonLd(data: unknown): string {
 
 const meta = (key: 'name' | 'property', id: string, content: string): HeadTag => ({ tag: 'meta', attrs: { [key]: id, content } })
 
+/** La intranet es privada: fuera de los buscadores y sin vista previa para redes. */
+export function buildIntranetHeadTags(): HeadTag[] {
+  return [meta('name', 'robots', 'noindex, nofollow'), meta('name', 'description', `Intranet de alumnos de ${site.name}.`)]
+}
+
 export function buildHeadTags(): HeadTag[] {
   return [
     meta('name', 'description', DESCRIPTION),

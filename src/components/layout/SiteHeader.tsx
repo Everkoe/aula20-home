@@ -58,8 +58,6 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
           <a
             href={site.links.intranet}
-            target="_blank"
-            rel="noopener noreferrer"
             className="hidden items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-cielo transition-colors hover:text-white sm:inline-flex"
           >
             <Lock aria-hidden="true" className="size-4" />
@@ -103,8 +101,6 @@ export function SiteHeader() {
             <div className="mt-3 flex flex-wrap items-center gap-x-8 sm:hidden">
               <a
                 href={site.links.intranet}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-cielo"
               >
                 <Lock aria-hidden="true" className="size-4" />

@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [{ "source": "/intranet/:path*", "destination": "/intranet/index.html" }]
+}

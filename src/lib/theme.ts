@@ -23,7 +23,8 @@ export function readTheme(): Theme {
 /** Cambia el tema de la página y lo recuerda en este navegador (si el almacenamiento está bloqueado, solo dura la visita). */
 export function applyTheme(theme: Theme) {
   document.documentElement.dataset.theme = theme
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_BAR_COLORS[theme])
+  // data-fixed: la intranet deja la barra del navegador en tinta en los dos temas.
+  document.querySelector('meta[name="theme-color"]:not([data-fixed])')?.setAttribute('content', THEME_BAR_COLORS[theme])
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme)
   } catch {

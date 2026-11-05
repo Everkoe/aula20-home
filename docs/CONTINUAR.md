@@ -1,13 +1,13 @@
 # Cómo continuar el proyecto (traspaso entre sesiones)
 
-Última actualización: 2026-11-04. Repositorio privado en GitHub: https://github.com/Everkoe/aula20-home (rama `main`). Sin desplegar: el usuario lo conectará a Vercel.
+Última actualización: 2026-11-04 (intranet de demostración construida, sección 9). Repositorio privado en GitHub: https://github.com/Everkoe/aula20-home (rama `main`). Sin desplegar: el usuario lo conectará a Vercel.
 
 ## 1. Contexto en 30 segundos
 
 - Propuesta de rediseño del **home de aula20.edu.pe** (Academia Aula 20, preuniversitaria, Lima y Callao),
   hecha por el estudio a partir de la auditoría `docs/auditoria-2026-11-04.md`.
 - Es un **prototipo navegable** del home, no el sitio completo: los enlaces a ciclos, cachimbos, docentes,
-  nosotros, sedes, PDFs legales e intranet llevan al sitio actual.
+  nosotros, sedes y PDFs legales llevan al sitio actual. "Intranet" lleva a nuestra demo en `/intranet/` (sección 9).
 - Concepto **"Marca tu ingreso"**: la cartilla óptica del examen (óvalos que se rellenan), la cuadrícula del
   cuaderno y el plumón resaltador. Brief completo en `docs/design/landing-brief.md`.
 - Stack: React 19 + Vite 8 + TypeScript + Tailwind 4 + lucide-react. Fuentes: Bricolage Grotesque
@@ -116,3 +116,47 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
 - La imagen de vista previa (`og:image`) es la foto del hero en WebP 1500×900. Para WhatsApp y Facebook conviene
   una JPG de 1200×630 hecha a propósito.
 - Los datos schema.org no llevan `logo`: falta el logo bicolor publicado en una URL (el blanco no sirve sobre fondo blanco).
+
+## 9. Intranet propia (2026-11-04, construida)
+
+- Auditoría de `intranet.aula20.edu.pe` (cuenta de alumna, solo lectura) en `docs/intranet/auditoria-intranet-2026-11-04.md`.
+  Incluye hallazgos de privacidad para avisar a Aula 20: cada página manda al navegador la ficha completa de matrícula.
+- Datos académicos reales reutilizables (cursos, temas por semana, estructura del simulacro, teléfonos de sedes), sin
+  datos personales ni enlaces, en `docs/intranet/datos-intranet-2026-11-04.json`.
+- Propuesta en `docs/design/intranet-brief.md` (concepto "Tu semana"). Aprobada y construida.
+- Nunca guardar en el repo datos de la cuenta revisada (nombre, documento, pagos, datos del responsable).
+
+### Cómo está hecha
+
+- Mismo repo y mismo build: segunda entrada `intranet/index.html` → `src/intranet/main.tsx`, en `/intranet/`.
+  `react-router` (modo declarativo, `basename="/intranet"`). Enlaces directos: middleware `intranetFallback` en
+  `vite.config.ts` (dev y `vite preview`) y la reescritura de `vercel.json` en Vercel. `noindex` desde `headTags.ts`.
+- Rutas: `/entrar` (botón "Entrar con la cuenta de demostración", sin usuario ni contraseña), `/inicio`, `/clases`
+  (`?semana=` y `?bloque=` en la URL), `/simulacros`, `/sede`, `/ayuda`, `/cuenta` y una página 404.
+  Sin sesión de demo (`sessionStorage`, `src/intranet/session.ts`) todo lleva a `/entrar` y luego vuelve.
+- Una sola entrada a la cuenta (el nombre, abajo en la barra lateral; el avatar en celular). "Cerrar sesión" solo
+  existe en Mi cuenta. Celular: barra superior + barra inferior con las 5 secciones.
+- Archivos y grabaciones son contenido pagado: los botones (`ui/DemoAction.tsx`) muestran un aviso en vez de abrir.
+  El buzón guarda los mensajes solo en memoria de la pantalla.
+
+| Carpeta | Qué hay |
+|---|---|
+| `src/intranet/content/` | Cursos, semanas (separatas + grabaciones), simulacros, contacto de sede y ayuda: reales, con fuente. `alumno.ts`: alumna y notas **de ejemplo**, marcadas así en pantalla |
+| `src/intranet/lib/` | `ciclo.ts` (semana actual, une separata + grabación por curso, avance a la meta), `fechas.ts` (rangos, puntajes `1058.5`), `semanas.ts`. Con pruebas |
+| `src/intranet/layout/` | Marco (barra lateral tinta, barras de celular, franja "Demostración"), `PageHeader`, aviso de demo |
+| `src/intranet/ui/` | `Panel` (hoja), `OvaloRadio` (óvalo de la cartilla), `MetaBar` (regla del puntaje), `DemoAction`, `Etiqueta` |
+| `src/intranet/pages/` | Una página por ruta |
+
+### Verificado
+
+- axe sin violaciones en las 7 rutas, en claro y en oscuro (con los `<details>` abiertos). Sin scroll horizontal a 375 px.
+- En modo oscuro el resaltador sigue siendo resaltador dentro de `.hoja-clara` (antes salía menta sobre blanco).
+
+### Pendiente
+
+- Los enlaces "Intranet" de la landing (encabezado, menú móvil y pie) llevan a `/intranet/` en la misma pestaña
+  (`site.links.intranet`). Si el home pasa a producción antes que la intranet, devolverlos a https://intranet.aula20.edu.pe/.
+- Inicio muestra 6 de las grabaciones de la semana; el orden es el que trae la intranet actual (no hay fecha por clase).
+- Eventos: la intranet actual no tiene ninguno; se muestra una línea vacía.
+- Confirmar con Aula 20 qué significan "ABC 1", "ABC 2" y "DE" en Física y Química, y los números de WhatsApp repetidos entre sedes.
+- Si algún día hay backend: sesión con cookie httpOnly, archivos con enlaces firmados y no mandar al navegador la ficha de matrícula.
