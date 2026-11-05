@@ -124,7 +124,8 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
 - Datos académicos reales reutilizables (cursos, temas por semana, estructura del simulacro, teléfonos de sedes), sin
   datos personales ni enlaces, en `docs/intranet/datos-intranet-2026-11-04.json`.
 - Propuesta en `docs/design/intranet-brief.md` (concepto "Tu semana"). Aprobada y construida.
-- Nunca guardar en el repo datos de la cuenta revisada (nombre, documento, pagos, datos del responsable).
+- Nunca guardar en el repo documento, pagos ni datos del responsable de la cuenta revisada. El nombre de la alumna
+  sí se usa en la demo: lo pidió ella misma (2026-11-04): ver `src/intranet/content/alumno.ts`.
 
 ### Cómo está hecha
 

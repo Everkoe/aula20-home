@@ -1,6 +1,7 @@
 /**
- * Alumna de DEMOSTRACIÓN. Nombre, código y notas son inventados y se presentan como ejemplo en pantalla:
- * la cuenta revisada no tenía simulacros calificados y sus datos personales no se usan.
+ * Alumna de la DEMOSTRACIÓN. El nombre es el de la alumna cuya cuenta se revisó, que es quien lo pidió (2026-11-04),
+ * tal como lo escribió (sin tildes). Código y notas son inventados y se marcan como ejemplo en pantalla: la cuenta
+ * no tenía simulacros calificados. Documento, pagos y datos del responsable no se usan.
  * Lo real: ciclo, sede, turno, la carrera como meta y su puntaje mínimo, que la intranet guarda por carrera.
  */
 import type { AreaUnmsm } from './simulacros'
@@ -17,8 +18,8 @@ export interface NotaSimulacro {
 }
 
 export const alumno = {
-  nombres: 'Valeria',
-  apellidos: 'Ríos Huamán',
+  nombres: 'Emilly Belen',
+  apellidos: 'Espino Davila',
   codigo: '00001234',
   ciclo: 'Intensivo',
   universidad: 'UNMSM',
@@ -33,6 +34,9 @@ export const alumno = {
     puntajeMinimo: 1058.5,
   },
 }
+
+/** Primer nombre, para el saludo y la barra lateral. */
+export const nombrePila = alumno.nombres.split(' ')[0] ?? alumno.nombres
 
 /** Ejemplo: dos simulacros con avance, para que se vean la tabla y la distancia a la meta. */
 export const notasDemo: NotaSimulacro[] = [

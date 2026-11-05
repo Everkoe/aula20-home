@@ -2,14 +2,14 @@ import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { ThemeToggle } from '../../components/layout/ThemeToggle'
 import { site } from '../../content/site'
-import { alumno } from '../content/alumno'
+import { alumno, nombrePila } from '../content/alumno'
 import type { Semana } from '../content/semanas'
 import { semanaEnCurso } from '../lib/semanas'
 import { formatRango } from '../lib/fechas'
 import { Avatar } from '../ui/Avatar'
 import { navItems } from './navigation'
 
-const nombreCorto = `${alumno.nombres} ${alumno.apellidos.split(' ')[0] ?? ''}`.trim()
+const nombreCorto = `${nombrePila} ${alumno.apellidos.split(' ')[0] ?? ''}`.trim()
 
 /**
  * Marco de la intranet. Escritorio: barra lateral tinta (la "sala") con la semana y las 5 secciones.
@@ -41,7 +41,7 @@ export function IntranetLayout() {
         <main id="contenido" ref={mainRef} className="cuadricula-clara min-w-0 pb-28 lg:pb-16">
           <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 border-b border-dashed border-linea px-4 py-2 text-center text-xs text-grafito-600">
             <span className="rounded-full bg-menta px-2 py-0.5 font-bold text-tinta">Demostración</span>
-            La alumna y sus notas son de ejemplo; cursos, temas y sede salen de la intranet actual.
+            Las notas y el código de alumna son de ejemplo; cursos, temas y sede salen de la intranet actual.
           </p>
           <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6 lg:px-10 lg:pt-12">
             <Outlet />

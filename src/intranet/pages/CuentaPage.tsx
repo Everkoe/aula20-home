@@ -68,16 +68,19 @@ function Ficha() {
       <div className="overflow-hidden rounded-3xl bg-hoja shadow-[0_30px_60px_-30px_rgb(0_10_59/0.55)] ring-1 ring-linea">
         <div className="cuadricula-marca flex items-center justify-between px-6 pt-5 pb-12">
           <img src={site.logo.light} alt="Aula 20" width={site.logo.width} height={site.logo.height} className="h-7 w-auto" />
-          <Etiqueta>Ejemplo</Etiqueta>
         </div>
         <div className="px-6 pb-6">
-          <div className="-mt-10 flex items-end gap-4">
+          {/* La foto se monta sobre la franja; el nombre empieza debajo de ella, así un nombre largo baja en vez de subir. */}
+          <div className="-mt-10 flex items-start gap-4">
             <Avatar className="size-24 text-3xl ring-4 ring-hoja" />
-            <div className="min-w-0 pb-1">
+            <div className="min-w-0 pt-13">
               <h2 id="cuenta-datos" className="text-2xl leading-tight font-extrabold text-titulo">
                 {alumno.nombres} {alumno.apellidos}
               </h2>
-              <p className="text-sm text-grafito-600 tabular-nums">Código {alumno.codigo}</p>
+              <p className="text-sm text-grafito-600 tabular-nums">
+                Código {alumno.codigo}
+                <Etiqueta>Ejemplo</Etiqueta>
+              </p>
             </div>
           </div>
 

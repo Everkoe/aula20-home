@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router'
 import { Highlight } from '../../components/ui/Heading'
 import { site } from '../../content/site'
-import { alumno } from '../content/alumno'
+import { alumno, nombrePila } from '../content/alumno'
 import { signIn } from '../session'
 
 /**
@@ -30,7 +30,7 @@ export function EntradaPage() {
             Tu semana, <Highlight>en un lugar.</Highlight>
           </h1>
           <p className="mt-4 text-grafito-600">
-            Prototipo con una alumna de ejemplo, {alumno.nombres}, del {alumno.ciclo} {alumno.universidad}. No pide usuario ni contraseña.
+            Prototipo con la cuenta de {nombrePila}, del {alumno.ciclo} {alumno.universidad}; sus notas son de ejemplo. No pide usuario ni contraseña.
           </p>
           <button
             type="button"

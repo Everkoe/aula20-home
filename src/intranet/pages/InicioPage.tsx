@@ -1,7 +1,7 @@
 import { ArrowRight, CalendarClock, FileCheck2, FileText, PlayCircle } from 'lucide-react'
 import { Link } from 'react-router'
 import { Highlight } from '../../components/ui/Heading'
-import { alumno, notasDemo } from '../content/alumno'
+import { alumno, nombrePila, notasDemo } from '../content/alumno'
 import { cursos } from '../content/cursos'
 import type { Grabacion, Semana } from '../content/semanas'
 import { simulacros } from '../content/simulacros'
@@ -68,7 +68,7 @@ function Portada({ semana }: { semana: Semana }) {
         <h1 id="inicio-titulo" tabIndex={-1} className="mt-5 animate-settle text-5xl leading-[0.95] font-extrabold tracking-tight outline-none sm:text-6xl lg:text-7xl">
           Hola,{' '}
           <Highlight tone="dark" isDrawnOnLoad>
-            {alumno.nombres}.
+            {nombrePila}.
           </Highlight>
         </h1>
         <p className="mt-5 text-cielo sm:text-lg">
