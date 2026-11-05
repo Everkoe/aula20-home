@@ -1,0 +1,204 @@
+{
+  "_fuente": "intranet.aula20.edu.pe, vista de alumno, ciclo UNMSM - INTENSIVO, salón T, sede Breña. Leído el 2026-11-04.",
+  "_nota": "Solo datos académicos y de la academia. Sin datos personales de la alumna ni enlaces a PDFs, Zoom o vouchers (son contenido pagado o privado).",
+  "ciclo": {
+    "nombre": "Intensivo",
+    "cicloInterno": "UNMSM - INTENSIVO",
+    "turno": "Completo",
+    "modalidad": "PRESENCIAL"
+  },
+  "cursos": [
+    { "id": 1, "nombre": "GEOGRAFÍA", "area": "letras", "orden": 1 },
+    { "id": 2, "nombre": "LITERATURA", "area": "letras", "orden": 2 },
+    { "id": 3, "nombre": "QUÍMICA", "area": "ciencias", "orden": 3 },
+    { "id": 4, "nombre": "GEOMETRÍA", "area": "matematicas", "orden": 4 },
+    { "id": 5, "nombre": "HP", "area": "letras", "orden": 5, "_sigla": "Historia del Perú" },
+    { "id": 6, "nombre": "HU", "area": "letras", "orden": 6, "_sigla": "Historia Universal" },
+    { "id": 7, "nombre": "FISICA", "area": "ciencias", "orden": 7 },
+    { "id": 8, "nombre": "ARITMÉTICA", "area": "matematicas", "orden": 8 },
+    { "id": 9, "nombre": "ANATOMÍA", "area": "ciencias", "orden": 9 },
+    { "id": 10, "nombre": "BIOLOGÍA", "area": "ciencias", "orden": 10 },
+    { "id": 11, "nombre": "LENGUAJE", "area": "letras", "orden": 11 },
+    { "id": 12, "nombre": "ÁLGEBRA", "area": "matematicas", "orden": 12 },
+    { "id": 13, "nombre": "HABILIDAD VERBAL", "area": "letras", "orden": 13 },
+    { "id": 14, "nombre": "CÍVICA", "area": "letras", "orden": 14 },
+    { "id": 15, "nombre": "TRIGONOMETRÍA", "area": "matematicas", "orden": 15 },
+    { "id": 16, "nombre": "ECONOMÍA", "area": "letras", "orden": 16 },
+    { "id": 17, "nombre": "PSICOLOGÍA", "area": "letras", "orden": 17 },
+    { "id": 18, "nombre": "FILOSOFÍA", "area": "letras", "orden": 18 },
+    { "id": 19, "nombre": "HM(B)", "area": "matematicas", "orden": 19, "_sigla": "Habilidad Matemática, grupo B" },
+    { "id": 20, "nombre": "HM(A)", "area": "matematicas", "orden": 20, "_sigla": "Habilidad Matemática, grupo A" },
+    { "id": 33, "nombre": "FISICA ABC 1", "area": "ciencias", "orden": 32, "_sigla": "Física para las áreas A, B y C, sesión 1" },
+    { "id": 34, "nombre": "FISICA ABC 2", "area": "ciencias", "orden": 33 },
+    { "id": 35, "nombre": "FISICA DE", "area": "ciencias", "orden": 34, "_sigla": "Física para las áreas D y E" },
+    { "id": 36, "nombre": "QUIMICA ABC 1", "area": "ciencias", "orden": 35 },
+    { "id": 37, "nombre": "QUIMICA ABC 2", "area": "ciencias", "orden": 36 },
+    { "id": 38, "nombre": "QUIMICA DE", "area": "ciencias", "orden": 37 }
+  ],
+  "_siglas": "Las siglas HP, HU, HM y los sufijos ABC/DE no se explican en la intranet. Las lecturas de _sigla son nuestras y hay que confirmarlas con Aula 20.",
+  "semanas": [
+    {
+      "nombre": "INTRODUCTORIO I",
+      "_otroNombre": "En Grabaciones se llama INTRODUCCIÓN 1",
+      "materiales": { "inicio": "2026-10-19", "fin": "2026-10-25", "total": 22 },
+      "grabaciones": {
+        "inicio": "2026-10-19",
+        "fin": "2026-10-23",
+        "total": 20,
+        "temas": [
+          ["PSICOLOGÍA", "DEFINICIÓN DE PSICOLOGÍA/MÉTODOS DE LA PSICOLOGÍA"],
+          ["FILOSOFÍA", "INTRO III: INTRODUCCIÓN A LA FILOSOFÍA"],
+          ["HM(B)", "SITUACIONES DEPORTIVAS - TRASLADOS"],
+          ["HM(A)", "ELEMENTOS RECREATIVOS"],
+          ["TRIGONOMETRÍA", "RAZONES TRIGONOMÉTRICAS DE ÁNGULOS NOTABLES"],
+          ["ECONOMÍA", "NECESIDADES HUMANAS Y BIENES Y SERVICIOS"],
+          ["HABILIDAD VERBAL", "RESUMEN"],
+          ["CÍVICA", "NORMA JURIDICA (INTRO III)"],
+          ["ANATOMÍA", "SISTEMA LINFÁTICO Y SISTEMA INMUNITARIO"],
+          ["BIOLOGÍA", "INTRODUCCION A BIOLOGIA – METODO CIENTIFICO"],
+          ["LENGUAJE", "COMUNICACIÓN Y LENGUAJE"],
+          ["ÁLGEBRA", "DIVISION DE POLINOMIOS"],
+          ["HP", "EL POBLAMIENTO AMERICANO - TEORIAS E LA CULTURA ANDINA"],
+          ["HU", "CULTURAS ORIENTALES: CHINA E INDIA"],
+          ["FISICA", "DINAMICA Y ROZAMIENTO"],
+          ["ARITMÉTICA", "PROGRESIÓN ARITMÉTICA Y GEOMÉTRICA"],
+          ["GEOGRAFÍA", "GEOGRAFÍA MATEMÁTICA"],
+          ["LITERATURA", "ESTUDIOS LITERARIOS – LITERATURA UNIVERSAL"],
+          ["QUÍMICA", "SISTEMA INTERNACIONAL DE MEDIDAS (S.I.)"],
+          ["GEOMETRÍA", "TRIÁNGULOS - I"]
+        ]
+      },
+      "simulacro": {
+        "fecha": null,
+        "porArea": {},
+        "generales": ["SOLUCIONARIO INTRODUCTORIO I.pdf", "CLAVES INTRODUCTORIO I_27.10.pdf"],
+        "_nota": "12 archivos en total; la lista por área de esta semana no se detalló."
+      }
+    },
+    {
+      "nombre": "SEMANA 1",
+      "materiales": { "inicio": "2026-10-26", "fin": "2026-11-01", "total": 24 },
+      "grabaciones": {
+        "inicio": "2026-10-26",
+        "fin": "2026-10-31",
+        "total": 23,
+        "temas": [
+          ["ÁLGEBRA", "ECUACIONES I"],
+          ["HM(A)", "ELEMENTOS RECREATIVOS"],
+          ["HM(B)", "SITUACIONES DEPORTIVAS - TRASLADOS"],
+          ["FILOSOFÍA", "FILOSOFÍA ANTIGUA I"],
+          ["PSICOLOGÍA", "BASES BIOLÓGICAS DEL PSIQUISMO I"],
+          ["FISICA", "CINEMÁTICA 1"],
+          ["ECONOMÍA", "ESPECIALIZADO - NOCIONES BÁSICAS Y DIVISIÓN DE LA ECONOMÍA"],
+          ["ECONOMÍA", "NOCIONES BÁSICAS Y DIVISIÓN DE LA ECONOMÍA"],
+          ["TRIGONOMETRÍA", "RAZONES TRIGONOMÉTRICAS DE ÁNGULOS AGUDOS."],
+          ["CÍVICA", "DERECHOS HUMANOS Y GARANTIAS CONSTITUCIONALES"],
+          ["HABILIDAD VERBAL", "TEMA CENTRAL"],
+          ["LENGUAJE", "SONIDOS DEL LENGUAJE"],
+          ["BIOLOGÍA", "BIOMOLECULAS ORGANICAS (GLUCIDOS, LIPIDOS, PROTEINAS Y ACIDOS NUCLEICOS)"],
+          ["ANATOMÍA", "HISTOLOGÍA HUMANA"],
+          ["FISICA", "ESPECIALIZADO - CINEMATICA 2"],
+          ["ARITMÉTICA", "PROGRESIÓN ARITMÉTICA Y GEOMÉTRICA"],
+          ["HU", "CULTURAS ORIENTALES: CHINA E INDIA"],
+          ["HP", "EL POBLAMIENTO AMERICANO - TEORIAS E LA CULTURA ANDINA"],
+          ["QUIMICA ABC 2", "TABLA PERIÓDICA MODERNA II"],
+          ["GEOMETRÍA", "CLASIFICACION DE LOS TRIÁNGULOS Y LÍNEAS NOTABLES ASOCIADAS AL TRIÁNGULO"],
+          ["QUIMICA ABC 1", "TABLA PERIÓDICA MODERNA I"],
+          ["LITERATURA", "CLASICISMO GRIEGO: ÉPICA - TRAGEDIA"],
+          ["GEOGRAFÍA", "GEOGRAFÍA COMO CIENCIA, GEODESIA Y HUSOS HORARIOS"]
+        ]
+      },
+      "simulacro": {
+        "fecha": "2026-10-31",
+        "porArea": {
+          "A": { "nombre": "Ciencias de la Salud", "examenes": ["HABILIDADES", "CONOCIMIENTOS"] },
+          "B": { "nombre": "Ciencias Básicas", "examenes": ["HABILIDADES", "CONOCIMIENTOS"] },
+          "C": { "nombre": "Ingenierías", "examenes": ["HABILIDADES", "CONOCIMIENTOS"] },
+          "D": { "nombre": "Ciencias Económicas y de la Gestión", "examenes": ["HABILIDADES", "CONOCIMIENTOS"] },
+          "E": { "nombre": null, "examenes": ["HABILIDADES", "CONOCIMIENTOS"], "_nota": "En la intranet está cargada como 'General', no como área E." }
+        },
+        "generales": ["SOLUCIONARIO SEMESTRAL INTENSIVO SEM 1.pdf", "CLAVES SEMANA 1.pdf"],
+        "nombreExamen": "EXAMEN CICLO SEMESTRAL INTENSIVO S1 - {area} {HABILIDADES|CONOCIMIENTOS}.pdf"
+      }
+    },
+    {
+      "nombre": "SEMANA 2",
+      "materiales": { "inicio": "2026-11-02", "fin": "2026-11-08", "total": 24 },
+      "grabaciones": {
+        "inicio": "2026-11-02",
+        "fin": "2026-11-06",
+        "total": 14,
+        "_nota": "Semana en curso al leerla (miércoles 4 de noviembre).",
+        "temas": [
+          ["LENGUAJE", "ESPECIALIZADO - MORFOLOGÍA"],
+          ["LENGUAJE", "MORFOLOGÍA"],
+          ["BIOLOGÍA", "CITOLOGIA: CELULA PROCARIOTA Y VIRUS"],
+          ["ANATOMÍA", "SISTEMA CIRCULATORIO ANIMAL"],
+          ["FISICA ABC 2", "CINEMÁTICA 4"],
+          ["ARITMÉTICA", "OPERACIONES ENTRE CONJUNTOS"],
+          ["FISICA ABC 1", "CINEMÁTICA 3"],
+          ["HU", "HOMINIZACIÓN - PREHISTORIA"],
+          ["HP", "LOS PRIMEROS POBLADORES DEL PERÚ – CULTURAS PREINCAS"],
+          ["QUIMICA ABC 2", "ESPECIALIZADO - ENLACE QUÍMICO II"],
+          ["GEOMETRÍA", "CONGRUENCIA DE TRIÁNGULOS Y SUS APLICACIONES"],
+          ["QUIMICA ABC 1", "ENLACE QUÍMICO I"],
+          ["LITERATURA", "CLASICISMO GRIEGO: ÉPICA - TRAGEDIA"],
+          ["GEOGRAFÍA", "GEOGRAFÍA COMO CIENCIA, GEODESIA Y HUSOS HORARIOS"]
+        ]
+      },
+      "simulacro": null
+    }
+  ],
+  "notasSimulacro": {
+    "columnas": ["Ranking", "Fecha", "Periodo", "Ciclo", "Sede", "Código", "Salón", "Act", "HV", "HM", "Matemáticas", "Letras", "Ciencias", "Puntaje Total"],
+    "porPagina": 20,
+    "_nota": "La cuenta no tiene simulacros calificados: no se vio ninguna fila real. Cada resultado abre una comparativa (/alumno/notas-simulacro/{id}/comparativa)."
+  },
+  "carreraObjetivo": {
+    "carrera": "CIENCIA POLÍTICA",
+    "area": "ÁREA E - HUMANIDADES Y CIENCIAS SOCIALES",
+    "modalidad": "EDUCACIÓN BÁSICA REGULAR (EBR) Y EDUCACIÓN BÁSICA ALTERNATIVA (EBA)",
+    "puntajeMinimo": 1058.5,
+    "minimoSanMarcos": 700,
+    "_nota": "La intranet guarda el puntaje mínimo de ingreso por carrera y lo usa como meta."
+  },
+  "metricasInicio": ["mejor_puntaje", "mejor_ranking", "promedio_puntaje", "diferencia_puntaje", "cambio_ranking", "porcentaje_cambio", "tendencia", "brecha", "porcentaje_progreso", "alcanzo_minimo"],
+  "recursos": { "materiales": 70, "grabaciones": 57, "simulacros": 24 },
+  "telefonosSedes": {
+    "_nota": "Leídos de Mi Sede. Hay números repetidos entre sedes (Comas y Carabayllo; San Marcos y Los Olivos) y formatos mezclados: confirmar con Aula 20.",
+    "brena": ["905453074", "908819602"],
+    "ate": ["970829353", "905454061"],
+    "carabayllo": ["970414738", "970157373"],
+    "chorrillos": ["912206403"],
+    "comas": ["970157373"],
+    "ingenieria": ["905445545"],
+    "los-olivos": ["970416023", "970409668"],
+    "manchay": ["924269121"],
+    "puente-piedra": ["908844935", "970147243"],
+    "san-juan-de-miraflores": ["924269078", "922002328"],
+    "san-marcos": ["970409668", "905453757"],
+    "san-miguel": ["908807340"],
+    "santa-anita": ["912205639", "905445551"],
+    "sjl-piramide-del-sol": ["970410732", "970412177"],
+    "sjl-san-martin": ["905445533"],
+    "ventanilla": ["908807323", "908819618"],
+    "villa-maria-del-triunfo": ["905452622"]
+  },
+  "horarioSede": "Lunes a Sábado (sin horas)",
+  "buzon": {
+    "categorias": ["Nueva Función", "Diseño y Usabilidad", "Velocidad", "Reporte de Error", "Otro Aporte"],
+    "estados": ["enviado", "en_revision", "planificado", "implementado", "desestimado"]
+  },
+  "eventos": {
+    "tipos": ["presencial", "virtual", "híbrido"],
+    "filtros": ["próximos", "finalizados", "gratuitos"],
+    "ejemplosDelTexto": ["amanecidas", "exámenes de becas", "ciclos de preparación", "talleres especiales"],
+    "_nota": "Sin eventos publicados al leerla."
+  },
+  "preguntasFrecuentes": [
+    "¿Cuándo y dónde se publican los resultados de los simulacros?",
+    "¿Cómo descargo los solucionarios y materiales de clase?",
+    "¿Qué debo hacer si mis datos personales están desactualizados?",
+    "¿Cómo puedo cambiar mi contraseña de acceso?"
+  ]
+}
