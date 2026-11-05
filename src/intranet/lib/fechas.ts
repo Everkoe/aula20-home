@@ -18,7 +18,11 @@ export function formatRango(inicio: string, fin: string): string {
 
 /** "sábado, 31 de octubre" → "sábado 31 de octubre". */
 export function formatFecha(iso: string): string {
-  return diaSemana.format(parseIsoDate(iso)).replace(',', '')
+  return formatDia(parseIsoDate(iso))
+}
+
+export function formatDia(fecha: Date): string {
+  return diaSemana.format(fecha).replace(',', '')
 }
 
 const puntos = new Intl.NumberFormat('es-PE', { minimumFractionDigits: 1, maximumFractionDigits: 1, useGrouping: false })

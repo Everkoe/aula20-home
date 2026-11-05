@@ -13,6 +13,8 @@ export interface Curso {
   nombre: string
   /** Sigla que usa la academia, si el nombre la reemplaza. */
   sigla?: string
+  /** Rótulo corto del sello de color del curso (nuestro, no de la academia). */
+  abrev: string
   bloque: Bloque
 }
 
@@ -25,30 +27,30 @@ export const bloques: Record<Bloque, string> = {
 
 /** En el orden en que se muestran: habilidades primero, como en el examen. */
 export const cursos: Curso[] = [
-  { id: 'habilidad-verbal', nombre: 'Habilidad verbal', sigla: 'HV', bloque: 'habilidades' },
-  { id: 'hm-a', nombre: 'Habilidad matemática A', sigla: 'HM(A)', bloque: 'habilidades' },
-  { id: 'hm-b', nombre: 'Habilidad matemática B', sigla: 'HM(B)', bloque: 'habilidades' },
-  { id: 'aritmetica', nombre: 'Aritmética', bloque: 'matematicas' },
-  { id: 'algebra', nombre: 'Álgebra', bloque: 'matematicas' },
-  { id: 'geometria', nombre: 'Geometría', bloque: 'matematicas' },
-  { id: 'trigonometria', nombre: 'Trigonometría', bloque: 'matematicas' },
-  { id: 'lenguaje', nombre: 'Lenguaje', bloque: 'letras' },
-  { id: 'literatura', nombre: 'Literatura', bloque: 'letras' },
-  { id: 'hp', nombre: 'Historia del Perú', sigla: 'HP', bloque: 'letras' },
-  { id: 'hu', nombre: 'Historia Universal', sigla: 'HU', bloque: 'letras' },
-  { id: 'geografia', nombre: 'Geografía', bloque: 'letras' },
-  { id: 'economia', nombre: 'Economía', bloque: 'letras' },
-  { id: 'civica', nombre: 'Cívica', bloque: 'letras' },
-  { id: 'psicologia', nombre: 'Psicología', bloque: 'letras' },
-  { id: 'filosofia', nombre: 'Filosofía', bloque: 'letras' },
-  { id: 'biologia', nombre: 'Biología', bloque: 'ciencias' },
-  { id: 'anatomia', nombre: 'Anatomía', bloque: 'ciencias' },
-  { id: 'fisica', nombre: 'Física', bloque: 'ciencias' },
-  { id: 'fisica-abc-1', nombre: 'Física ABC 1', bloque: 'ciencias' },
-  { id: 'fisica-abc-2', nombre: 'Física ABC 2', bloque: 'ciencias' },
-  { id: 'fisica-de', nombre: 'Física DE', bloque: 'ciencias' },
-  { id: 'quimica', nombre: 'Química', bloque: 'ciencias' },
-  { id: 'quimica-abc-1', nombre: 'Química ABC 1', bloque: 'ciencias' },
-  { id: 'quimica-abc-2', nombre: 'Química ABC 2', bloque: 'ciencias' },
-  { id: 'quimica-de', nombre: 'Química DE', bloque: 'ciencias' },
+  { id: 'habilidad-verbal', abrev: 'HV', nombre: 'Habilidad verbal', sigla: 'HV', bloque: 'habilidades' },
+  { id: 'hm-a', abrev: 'HM·A', nombre: 'Habilidad matemática A', sigla: 'HM(A)', bloque: 'habilidades' },
+  { id: 'hm-b', abrev: 'HM·B', nombre: 'Habilidad matemática B', sigla: 'HM(B)', bloque: 'habilidades' },
+  { id: 'aritmetica', abrev: 'ARI', nombre: 'Aritmética', bloque: 'matematicas' },
+  { id: 'algebra', abrev: 'ÁLG', nombre: 'Álgebra', bloque: 'matematicas' },
+  { id: 'geometria', abrev: 'GEOM', nombre: 'Geometría', bloque: 'matematicas' },
+  { id: 'trigonometria', abrev: 'TRIG', nombre: 'Trigonometría', bloque: 'matematicas' },
+  { id: 'lenguaje', abrev: 'LEN', nombre: 'Lenguaje', bloque: 'letras' },
+  { id: 'literatura', abrev: 'LIT', nombre: 'Literatura', bloque: 'letras' },
+  { id: 'hp', abrev: 'HP', nombre: 'Historia del Perú', sigla: 'HP', bloque: 'letras' },
+  { id: 'hu', abrev: 'HU', nombre: 'Historia Universal', sigla: 'HU', bloque: 'letras' },
+  { id: 'geografia', abrev: 'GEOG', nombre: 'Geografía', bloque: 'letras' },
+  { id: 'economia', abrev: 'ECO', nombre: 'Economía', bloque: 'letras' },
+  { id: 'civica', abrev: 'CÍV', nombre: 'Cívica', bloque: 'letras' },
+  { id: 'psicologia', abrev: 'PSI', nombre: 'Psicología', bloque: 'letras' },
+  { id: 'filosofia', abrev: 'FIL', nombre: 'Filosofía', bloque: 'letras' },
+  { id: 'biologia', abrev: 'BIO', nombre: 'Biología', bloque: 'ciencias' },
+  { id: 'anatomia', abrev: 'ANA', nombre: 'Anatomía', bloque: 'ciencias' },
+  { id: 'fisica', abrev: 'FÍS', nombre: 'Física', bloque: 'ciencias' },
+  { id: 'fisica-abc-1', abrev: 'F·A1', nombre: 'Física ABC 1', bloque: 'ciencias' },
+  { id: 'fisica-abc-2', abrev: 'F·A2', nombre: 'Física ABC 2', bloque: 'ciencias' },
+  { id: 'fisica-de', abrev: 'F·DE', nombre: 'Física DE', bloque: 'ciencias' },
+  { id: 'quimica', abrev: 'QUÍ', nombre: 'Química', bloque: 'ciencias' },
+  { id: 'quimica-abc-1', abrev: 'Q·A1', nombre: 'Química ABC 1', bloque: 'ciencias' },
+  { id: 'quimica-abc-2', abrev: 'Q·A2', nombre: 'Química ABC 2', bloque: 'ciencias' },
+  { id: 'quimica-de', abrev: 'Q·DE', nombre: 'Química DE', bloque: 'ciencias' },
 ]

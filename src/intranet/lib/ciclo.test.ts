@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { cursos } from '../content/cursos'
 import { semanas } from '../content/semanas'
-import { avanceMeta, clasesDeSemana, nombreCurso, semanaActual } from './ciclo'
+import { avanceMeta, cambioEntre, clasesDeSemana, diaDeLaSemana, finDeRegla, nombreCurso, semanaActual } from './ciclo'
 import { formatPuntaje, formatRango, parseIsoDate } from './fechas'
 
 const tresSemanas = [
@@ -86,5 +86,37 @@ describe('fechas', () => {
   test('el puntaje lleva un decimal y no separa miles', () => {
     expect(formatPuntaje(1058.5)).toBe('1058.5')
     expect(formatPuntaje(941)).toBe('941.0')
+  })
+})
+
+describe('diaDeLaSemana', () => {
+  const semana = { inicio: '2026-11-02' }
+
+  test('lunes es 0 y el miércoles 4 es 2, a cualquier hora', () => {
+    expect(diaDeLaSemana(semana, new Date(2026, 10, 2, 0, 5))).toBe(0)
+    expect(diaDeLaSemana(semana, new Date(2026, 10, 4, 23, 50))).toBe(2)
+  })
+
+  test('fuera de la semana se queda en -1 o 7', () => {
+    expect(diaDeLaSemana(semana, new Date(2026, 9, 20))).toBe(-1)
+    expect(diaDeLaSemana(semana, new Date(2026, 10, 30))).toBe(7)
+  })
+})
+
+describe('cambioEntre', () => {
+  test('cuenta puntos ganados y puestos subidos', () => {
+    expect(cambioEntre({ total: 812.5, puestoSalon: 19 }, { total: 941, puestoSalon: 14 })).toEqual({ puntos: 128.5, puestosSalon: 5 })
+  })
+
+  test('si baja, los dos salen negativos', () => {
+    expect(cambioEntre({ total: 900, puestoSalon: 10 }, { total: 880.4, puestoSalon: 12 })).toEqual({ puntos: -19.6, puestosSalon: -2 })
+  })
+})
+
+describe('finDeRegla', () => {
+  test('sube al siguiente múltiplo de 200', () => {
+    expect(finDeRegla([941, 1058.5])).toBe(1200)
+    expect(finDeRegla([1200])).toBe(1400)
+    expect(finDeRegla([])).toBe(200)
   })
 })

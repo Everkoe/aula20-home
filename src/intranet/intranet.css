@@ -1,0 +1,78 @@
+/*
+ * Piezas propias de la intranet. Se apoyan en los tokens y en el óvalo de src/styles/index.css.
+ */
+
+/* Óvalo ya marcado sin radio detrás (días que pasaron, tu puesto). */
+.ovalo-lleno::after {
+  clip-path: inset(0 0 0 0 round 9999px);
+}
+
+/* Hoy: el óvalo a medio pintar, como quien lo está marcando. */
+.ovalo-hoy {
+  border-color: var(--color-menta);
+}
+
+.ovalo-hoy::after {
+  clip-path: inset(0 50% 0 0 round 9999px);
+}
+
+/* Sobre tinta o azul el lápiz es menta: el relleno normal (titulo) desaparece sobre el fondo. */
+.ovalo-menta::after {
+  background-color: var(--color-menta);
+}
+
+/* Óvalo de los días: más chico en celular para que entren los siete. */
+.ovalo-dia {
+  width: 2.1rem;
+  height: 1.3rem;
+}
+
+@media (min-width: 640px) {
+  .ovalo-dia {
+    width: 2.75rem;
+    height: 1.6rem;
+  }
+}
+
+.ovalo-mini {
+  width: 1.55rem;
+  height: 0.95rem;
+  border-width: 1.5px;
+}
+
+.ovalo-mini::after {
+  inset: 1.5px;
+}
+
+/* Cinta adhesiva de las notas pegadas (la misma de la foto de la portada). */
+.cinta {
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  width: 5.5rem;
+  height: 1.5rem;
+  translate: -50% 0;
+  rotate: 3deg;
+  border-radius: 0.2rem;
+  background: color-mix(in srgb, var(--color-menta) 85%, transparent);
+}
+
+/* Nota pegada: se endereza al pasar el cursor. */
+.nota {
+  transition:
+    rotate 0.5s var(--ease-suave),
+    translate 0.5s var(--ease-suave),
+    box-shadow 0.5s var(--ease-suave);
+}
+
+a.nota:hover {
+  rotate: 0deg;
+  translate: 0 -4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.nota:hover {
+    rotate: none;
+    translate: none;
+  }
+}

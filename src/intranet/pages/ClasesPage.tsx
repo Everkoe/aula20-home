@@ -4,13 +4,16 @@ import { bloques, type Bloque } from '../content/cursos'
 import { semanas, type Semana } from '../content/semanas'
 import { PageHeader } from '../layout/PageHeader'
 import { clasesDeSemana, type FilaClase } from '../lib/ciclo'
-import { semanaEnCurso } from '../lib/semanas'
 import { formatRango } from '../lib/fechas'
+import { semanaEnCurso } from '../lib/semanas'
+import { colorBloque } from '../ui/bloques'
+import { CursoSello } from '../ui/CursoSello'
 import { DemoAction } from '../ui/DemoAction'
 import { Etiqueta } from '../ui/Etiqueta'
 import { OvaloRadio } from '../ui/OvaloRadio'
 
 type Filtro = Bloque | 'todos'
+type Cuenta = { label: string; value: number }
 
 const ordenBloques = Object.keys(bloques) as Bloque[]
 
@@ -44,6 +47,8 @@ export function ClasesPage() {
   const grupos = ordenBloques
     .map((bloque) => ({ bloque, filas: visibles.filter((f) => f.curso.bloque === bloque) }))
     .filter((g) => g.filas.length > 0)
+  const isEnCurso = semana.id === semanaEnCurso?.id
+  const cuenta = contar(visibles)
 
   return (
     <>
@@ -51,47 +56,66 @@ export function ClasesPage() {
         Separata y grabación de cada curso, juntas.
       </PageHeader>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
-        <SemanaPicker semanaId={semana.id} onSelect={(id) => update('semana', id)} />
-
-        <div className="min-w-0">
-          <BloqueFilter filtro={filtro} onSelect={(value) => update('bloque', value)} />
-          <p role="status" className="mt-4 text-sm text-grafito-600">
-            {resumen(semana, visibles)}
-          </p>
-          <div className="mt-4 grid gap-6">
-            {grupos.map((g) => (
-              <section key={g.bloque} aria-labelledby={`bloque-${g.bloque}`} className="rounded-3xl border border-linea bg-hoja px-5 py-2 sm:px-7">
-                <h2 id={`bloque-${g.bloque}`} className="pt-4 pb-1 text-lg font-extrabold text-titulo">
-                  {bloques[g.bloque]}
-                </h2>
-                <ul className="divide-y divide-linea">
-                  {g.filas.map((fila) => (
-                    <FilaCurso key={fila.curso.id} fila={fila} isEnCurso={semana.id === semanaEnCurso?.id} />
-                  ))}
-                </ul>
-              </section>
+      {/* La cartilla de la landing: hoja clara (también en modo oscuro) con los óvalos para elegir semana. */}
+      <div className="hoja-clara mt-8 overflow-hidden rounded-3xl border border-linea bg-hoja shadow-[0_30px_60px_-45px_rgb(0_10_59/0.45)]">
+        <div className="grid gap-5 p-5 sm:p-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <SemanaPicker semanaId={semana.id} onSelect={(id) => update('semana', id)} />
+          <dl className="flex gap-6 border-t border-dashed border-linea pt-4 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-6">
+            {cuenta.map(({ label, value }) => (
+              <div key={label} className="flex flex-col-reverse">
+                <dt className="text-xs font-semibold text-grafito-600">{label}</dt>
+                <dd className="font-display text-3xl leading-none font-extrabold text-titulo">{value}</dd>
+              </div>
             ))}
-          </div>
+          </dl>
         </div>
+        <div className="border-t border-dashed border-linea bg-papel px-5 py-4 sm:px-6">
+          <BloqueFilter filtro={filtro} onSelect={(value) => update('bloque', value)} />
+        </div>
+      </div>
+      <p role="status" className="sr-only">
+        {resumen(semana, cuenta)}
+      </p>
+
+      <div className="mt-10 grid gap-10">
+        {grupos.map((g) => (
+          <section key={g.bloque} aria-labelledby={`bloque-${g.bloque}`}>
+            <div className="flex items-center gap-3">
+              <span aria-hidden="true" className={`h-6 w-1.5 rounded-full ${colorBloque[g.bloque].relleno}`} />
+              <h2 id={`bloque-${g.bloque}`} className="text-2xl font-extrabold tracking-tight text-titulo">
+                {bloques[g.bloque]}
+              </h2>
+              <span className="text-sm text-grafito-600">{g.filas.length === 1 ? '1 curso' : `${g.filas.length} cursos`}</span>
+            </div>
+            <ul className="mt-4 grid gap-4 md:grid-cols-2">
+              {g.filas.map((fila) => (
+                <FichaCurso key={fila.curso.id} fila={fila} isEnCurso={isEnCurso} />
+              ))}
+            </ul>
+          </section>
+        ))}
       </div>
     </>
   )
 }
 
-function resumen(semana: Semana, filas: FilaClase[]): string {
-  const separatas = filas.filter((f) => f.hasSeparata).length
-  const grabaciones = filas.reduce((n, f) => n + f.grabaciones.length, 0)
-  const plural = (n: number, una: string, varias: string) => `${n} ${n === 1 ? una : varias}`
-  return `${plural(filas.length, 'curso', 'cursos')} · ${plural(separatas, 'separata', 'separatas')} · ${plural(grabaciones, 'grabación', 'grabaciones')} en la ${semana.nombre}`
+function contar(filas: FilaClase[]): Cuenta[] {
+  return [
+    { label: filas.length === 1 ? 'curso' : 'cursos', value: filas.length },
+    { label: 'separatas', value: filas.filter((f) => f.hasSeparata).length },
+    { label: 'grabaciones', value: filas.reduce((n, f) => n + f.grabaciones.length, 0) },
+  ]
+}
+
+function resumen(semana: Semana, cuenta: Cuenta[]): string {
+  return `${cuenta.map((c) => `${c.value} ${c.label}`).join(', ')} en la ${semana.nombre}.`
 }
 
 function SemanaPicker({ semanaId, onSelect }: { semanaId: string; onSelect: (id: string) => void }) {
   return (
-    <fieldset className="rounded-3xl border border-linea bg-hoja p-3">
-      {/* float: así la leyenda va dentro de la hoja y no corta el borde del fieldset. */}
-      <legend className="float-left w-full px-2 pt-1 pb-2 text-xs font-bold tracking-[0.2em] text-acento uppercase">Semana</legend>
-      <div className="clear-left grid gap-1 sm:grid-cols-3 lg:grid-cols-1">
+    <fieldset className="min-w-0">
+      <legend className="text-xs font-bold tracking-[0.2em] text-acento uppercase">Semana</legend>
+      <div className="mt-2 grid gap-1 sm:grid-cols-3">
         {[...semanas].reverse().map((s) => (
           <OvaloRadio key={s.id} name="semana" value={s.id} isChecked={s.id === semanaId} onSelect={onSelect} detail={formatRango(s.inicio, s.fin)}>
             {s.nombre}
@@ -112,9 +136,10 @@ function BloqueFilter({ filtro, onSelect }: { filtro: Filtro; onSelect: (value: 
         {filtros.map(({ value, label }) => (
           <label
             key={value}
-            className="inline-flex min-h-11 cursor-pointer items-center rounded-full border border-linea bg-hoja px-4 text-sm font-semibold text-grafito transition-colors hover:border-acento has-checked:border-titulo has-checked:bg-titulo has-checked:text-papel has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-acento"
+            className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border border-linea bg-hoja px-4 text-sm font-semibold text-grafito transition-colors hover:border-acento has-checked:border-titulo has-checked:bg-titulo has-checked:text-hoja has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-acento"
           >
             <input type="radio" name="bloque" value={value} checked={filtro === value} onChange={() => onSelect(value)} className="sr-only" />
+            {value !== 'todos' && <span aria-hidden="true" className={`size-2.5 rounded-full ring-1 ring-tinta/15 ${colorBloque[value].enHojaClara}`} />}
             {label}
           </label>
         ))}
@@ -123,37 +148,41 @@ function BloqueFilter({ filtro, onSelect }: { filtro: Filtro; onSelect: (value: 
   )
 }
 
-function FilaCurso({ fila, isEnCurso }: { fila: FilaClase; isEnCurso: boolean }) {
+/** Ficha de un curso: sello, temas grabados (cada uno con su botón) y la separata. */
+function FichaCurso({ fila, isEnCurso }: { fila: FilaClase; isEnCurso: boolean }) {
   const { curso, hasSeparata, grabaciones } = fila
   return (
-    <li className="grid gap-3 py-4 sm:grid-cols-[11rem_minmax(0,1fr)_auto] sm:items-start sm:gap-5">
-      <p className="font-bold text-titulo">
-        {curso.nombre}
-        {curso.sigla && <span className="block text-xs font-semibold text-grafito-600">{curso.sigla}</span>}
-      </p>
+    <li className="flex gap-4 rounded-3xl border border-linea bg-hoja p-4 sm:p-5">
+      <CursoSello curso={curso} size="lg" />
+      <div className="min-w-0 flex-1">
+        <h3 className="text-lg leading-tight font-bold text-titulo">
+          {curso.nombre}
+          {curso.sigla && <span className="ml-2 text-xs font-semibold text-grafito-600">{curso.sigla}</span>}
+        </h3>
 
-      <div className="grid gap-2">
         {grabaciones.length === 0 ? (
-          <p className="text-sm text-grafito-600">{isEnCurso ? 'Aún sin grabación.' : 'Sin grabación esa semana.'}</p>
+          <p className="mt-1 text-sm text-grafito-600">{isEnCurso ? 'Aún sin grabación.' : 'Sin grabación esa semana.'}</p>
         ) : (
-          grabaciones.map((g) => (
-            <div key={`${g.tema}-${g.isEspecializado ? 'esp' : 'reg'}`} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-              <p className="min-w-0 text-sm text-grafito">
-                {g.tema}
-                {g.isEspecializado && <Etiqueta>Especializado</Etiqueta>}
-              </p>
-              <DemoAction icon={PlayCircle} label="Grabación" detail={`de ${curso.nombre}: ${g.tema}${g.isEspecializado ? ' (especializado)' : ''}`} />
-            </div>
-          ))
+          <ul className="mt-2 grid gap-2">
+            {grabaciones.map((g) => (
+              <li key={`${g.tema}-${g.isEspecializado ? 'esp' : 'reg'}`} className="flex items-start justify-between gap-3">
+                <p className="min-w-0 pt-1.5 text-sm text-grafito">
+                  {g.tema}
+                  {g.isEspecializado && <Etiqueta>Especializado</Etiqueta>}
+                </p>
+                <DemoAction icon={PlayCircle} label="Ver" detail={`la grabación de ${curso.nombre}: ${g.tema}${g.isEspecializado ? ' (especializado)' : ''}`} />
+              </li>
+            ))}
+          </ul>
         )}
-      </div>
 
-      <div className="sm:pt-0.5">
-        {hasSeparata ? (
-          <DemoAction icon={FileText} label="Separata" detail={`de ${curso.nombre}`} />
-        ) : (
-          <p className="text-sm text-grafito-600">Sin separata</p>
-        )}
+        <div className="mt-3 border-t border-dashed border-linea pt-3">
+          {hasSeparata ? (
+            <DemoAction icon={FileText} label="Separata" detail={`de ${curso.nombre}`} />
+          ) : (
+            <p className="text-sm text-grafito-600">Sin separata esta semana.</p>
+          )}
+        </div>
       </div>
     </li>
   )

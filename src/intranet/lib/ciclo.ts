@@ -1,3 +1,4 @@
+import type { NotaSimulacro } from '../content/alumno'
 import { cursos as todosLosCursos, type Curso } from '../content/cursos'
 import type { Grabacion, Semana } from '../content/semanas'
 import { parseIsoDate } from './fechas'
@@ -54,4 +55,35 @@ export function avanceMeta(puntaje: number, minimo: number): AvanceMeta {
   const faltan = Math.max(0, Math.round((minimo - puntaje) * 10) / 10)
   const porcentaje = minimo > 0 ? Math.min(100, Math.max(0, (puntaje / minimo) * 100)) : 0
   return { faltan, porcentaje, isAlcanzada: faltan === 0 }
+}
+
+const MS_POR_DIA = 86_400_000
+
+/** Lugar de `hoy` en la semana: 0 = lunes … 6 = domingo; -1 si aún no empieza y 7 si ya terminó. */
+export function diaDeLaSemana(semana: Pick<Semana, 'inicio'>, hoy: Date): number {
+  const dia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())
+  const diferencia = Math.round((dia.getTime() - parseIsoDate(semana.inicio).getTime()) / MS_POR_DIA)
+  return Math.max(-1, Math.min(7, diferencia))
+}
+
+export interface Cambio {
+  /** Puntos ganados (negativo si bajó). */
+  puntos: number
+  /** Puestos que subió en el salón (negativo si bajó). */
+  puestosSalon: number
+}
+
+export function cambioEntre(anterior: Pick<NotaSimulacro, 'total' | 'puestoSalon'>, actual: Pick<NotaSimulacro, 'total' | 'puestoSalon'>): Cambio {
+  return {
+    puntos: Math.round((actual.total - anterior.total) * 10) / 10,
+    puestosSalon: anterior.puestoSalon - actual.puestoSalon,
+  }
+}
+
+const PASO_REGLA = 200
+
+/** Final de la regla del puntaje: el siguiente múltiplo de 200 por encima del mayor valor (1058.5 → 1200). */
+export function finDeRegla(valores: readonly number[]): number {
+  const mayor = Math.max(0, ...valores)
+  return (Math.floor(mayor / PASO_REGLA) + 1) * PASO_REGLA
 }

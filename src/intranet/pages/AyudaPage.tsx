@@ -1,5 +1,6 @@
 import { ChevronDown, MessageCircle, Phone } from 'lucide-react'
 import { useId, useState, type FormEvent } from 'react'
+import { ButtonLink } from '../../components/ui/ButtonLink'
 import { site } from '../../content/site'
 import { buildWhatsAppLink, formatPhone, telHref } from '../../lib/whatsapp'
 import { alumno } from '../content/alumno'
@@ -8,7 +9,6 @@ import { contactoSedes } from '../content/sede'
 import { useDemoNotice } from '../demoNotice'
 import { PageHeader } from '../layout/PageHeader'
 import { OvaloRadio } from '../ui/OvaloRadio'
-import { Panel } from '../ui/Panel'
 
 const MIN_CARACTERES = 10
 const MAX_CARACTERES = 1000
@@ -29,9 +29,11 @@ function isCategoria(value: string): value is Categoria {
 export function AyudaPage() {
   return (
     <>
-      <PageHeader title="Ayuda y" highlight="buzón." />
-      <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
-        <div className="grid gap-6">
+      <PageHeader title="Ayuda y" highlight="buzón.">
+        Lo que más se pregunta, a quién escribir y dónde dejar lo que mejorarías.
+      </PageHeader>
+      <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-8">
+        <div className="grid min-w-0 gap-10">
           <Preguntas />
           <Buzon />
         </div>
@@ -43,52 +45,60 @@ export function AyudaPage() {
 
 function Preguntas() {
   return (
-    <Panel id="ayuda-preguntas" title="Preguntas frecuentes">
-      <div className="mt-4 divide-y divide-linea border-y border-linea">
-        {preguntas.map(({ pregunta, respuesta }) => (
-          <details key={pregunta} className="group">
-            <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 py-3 font-semibold text-titulo [&::-webkit-details-marker]:hidden">
-              {pregunta}
-              <ChevronDown aria-hidden="true" className="size-5 shrink-0 text-acento transition-transform group-open:rotate-180 motion-reduce:transition-none" />
-            </summary>
-            <p className="pb-4 text-grafito-600">{respuesta}</p>
-          </details>
+    <section aria-labelledby="ayuda-preguntas">
+      <h2 id="ayuda-preguntas" className="text-2xl font-extrabold tracking-tight text-titulo sm:text-3xl">
+        Preguntas frecuentes
+      </h2>
+      <ol className="mt-5 divide-y divide-linea overflow-hidden rounded-3xl border border-linea bg-hoja">
+        {preguntas.map(({ pregunta, respuesta }, i) => (
+          <li key={pregunta}>
+            <details className="group">
+              <summary className="flex min-h-16 cursor-pointer list-none items-center gap-4 px-5 py-4 transition-colors hover:bg-papel sm:px-6 [&::-webkit-details-marker]:hidden">
+                <span aria-hidden="true" className="w-8 shrink-0 font-display text-2xl leading-none font-extrabold text-acento tabular-nums">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className="min-w-0 flex-1 font-semibold text-titulo">{pregunta}</span>
+                <ChevronDown aria-hidden="true" className="size-5 shrink-0 text-acento transition-transform group-open:rotate-180 motion-reduce:transition-none" />
+              </summary>
+              <p className="px-5 pb-5 pl-17 text-grafito sm:px-6 sm:pl-18">{respuesta}</p>
+            </details>
+          </li>
         ))}
-      </div>
-    </Panel>
+      </ol>
+    </section>
   )
 }
 
+/** La pieza oscura de la página: con quién hablar, sin buscar números. */
 function Contacto() {
   const sede = contactoSedes[alumno.sedeId]
   const whatsapp = sede?.whatsapp[0]
-  const linkClass = 'flex min-h-11 items-center gap-3 rounded-2xl text-sm font-semibold text-acento hover:underline'
 
   return (
-    <Panel id="ayuda-contacto" title="Habla con alguien">
-      <ul className="mt-4 grid gap-3">
+    <section aria-labelledby="ayuda-contacto" className="cuadricula-oscura rounded-3xl p-6 text-cielo ring-1 ring-white/10 sm:p-7 lg:sticky lg:top-8">
+      <p className="text-xs font-bold tracking-[0.2em] uppercase">Contacto</p>
+      <h2 id="ayuda-contacto" className="mt-2 text-2xl leading-tight font-extrabold text-white">
+        Habla con alguien
+      </h2>
+      <p className="mt-2 text-sm">Para dudas de pagos, horarios o tu matrícula, mejor que el buzón.</p>
+
+      <ul className="mt-6 grid gap-3">
         {sede && whatsapp && (
           <li>
-            <a href={buildWhatsAppLink(whatsapp)} target="_blank" rel="noopener noreferrer" className={linkClass}>
-              <MessageCircle aria-hidden="true" className="size-5 shrink-0" />
-              <span>
-                Sede {sede.nombre} · <span className="tabular-nums">{formatPhone(whatsapp)}</span>
-                <span className="sr-only"> (WhatsApp, se abre en otra pestaña)</span>
-              </span>
-            </a>
+            <ButtonLink href={buildWhatsAppLink(whatsapp)} variant="primary" icon={MessageCircle} isExternal className="w-full">
+              Sede {sede.nombre}
+              <span className="sr-only">: {formatPhone(whatsapp)} (WhatsApp, se abre en otra pestaña)</span>
+            </ButtonLink>
           </li>
         )}
         <li>
-          <a href={telHref(site.contact.phone)} className={linkClass}>
-            <Phone aria-hidden="true" className="size-5 shrink-0" />
-            <span>
-              Central · <span className="tabular-nums">{formatPhone(site.contact.phone)}</span>
-            </span>
-          </a>
-          <p className="mt-1 pl-8 text-xs text-grafito-600">{site.contact.schedule}</p>
+          <ButtonLink href={telHref(site.contact.phone)} variant="ghost-dark" icon={Phone} className="w-full tabular-nums">
+            Central · {formatPhone(site.contact.phone)}
+          </ButtonLink>
         </li>
       </ul>
-    </Panel>
+      <p className="mt-4 border-t border-dashed border-white/20 pt-4 text-sm">{site.contact.schedule}</p>
+    </section>
   )
 }
 
@@ -119,10 +129,18 @@ function Buzon() {
     if (isCategoria(value)) setCategoria(value)
   }
 
+  // La hoja de la cartilla: clara también en modo oscuro, como el formulario de la landing.
   return (
-    <Panel id="ayuda-buzon" title="Buzón de sugerencias">
-      <p className="mt-1 text-sm text-grafito-600">Lo que mejorarías de la intranet o de las clases. La academia te responde con el estado.</p>
-      <form noValidate onSubmit={handleSubmit} className="mt-5 grid gap-5">
+    <section aria-labelledby="ayuda-buzon" className="hoja-clara min-w-0 overflow-hidden rounded-3xl border border-linea bg-hoja shadow-[0_30px_60px_-45px_rgb(0_10_59/0.45)]">
+      <div className="border-b border-dashed border-linea px-5 pt-6 pb-5 sm:px-7">
+        <p className="text-xs font-bold tracking-[0.2em] text-acento uppercase">Buzón de sugerencias</p>
+        <h2 id="ayuda-buzon" className="mt-2 text-2xl leading-tight font-extrabold text-titulo sm:text-3xl">
+          ¿Qué mejorarías?
+        </h2>
+        <p className="mt-2 text-grafito-600">De la intranet o de las clases. La academia te responde con el estado.</p>
+      </div>
+
+      <form noValidate onSubmit={handleSubmit} className="grid gap-6 px-5 py-6 sm:px-7">
         <fieldset aria-describedby={error ? errorId : undefined}>
           <legend className="text-sm font-bold text-titulo">Trata de</legend>
           <div className="mt-2 grid gap-1 sm:grid-cols-3">
@@ -156,19 +174,19 @@ function Buzon() {
       </form>
 
       {mensajes.length > 0 && <TusMensajes mensajes={mensajes} />}
-    </Panel>
+    </section>
   )
 }
 
 function TusMensajes({ mensajes }: { mensajes: Mensaje[] }) {
   return (
-    <section aria-labelledby="buzon-enviados" className="mt-8 border-t border-dashed border-linea pt-5">
-      <h3 id="buzon-enviados" className="text-sm font-bold tracking-[0.2em] text-acento uppercase">
+    <section aria-labelledby="buzon-enviados" className="border-t border-dashed border-linea bg-papel px-5 py-6 sm:px-7">
+      <h3 id="buzon-enviados" className="text-xs font-bold tracking-[0.2em] text-acento uppercase">
         Tus mensajes
       </h3>
       <ul className="mt-3 grid gap-3">
         {mensajes.map((m) => (
-          <li key={m.id} className="rounded-2xl border border-linea bg-papel p-4">
+          <li key={m.id} className="rounded-2xl border border-linea bg-hoja p-4">
             <p className="flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-grafito-600">
               {m.categoria}
               <span className="rounded-full bg-aula-50 px-2 py-0.5 text-acento">{estadosBuzon[m.estado]}</span>

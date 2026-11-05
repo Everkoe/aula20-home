@@ -19,10 +19,10 @@ export function PageHeader({ title, highlight, eyebrow, children }: Props) {
     <div className="max-w-3xl">
       <title>{`${fullTitle} · Intranet Aula 20`}</title>
       {eyebrow && <p className="text-xs font-bold tracking-[0.2em] text-acento uppercase">{eyebrow}</p>}
-      <h1 tabIndex={-1} className="mt-3 text-3xl leading-tight font-extrabold tracking-tight text-titulo outline-none sm:text-4xl">
-        {title} {highlight && <Highlight>{highlight}</Highlight>}
+      <h1 tabIndex={-1} className="mt-3 animate-settle text-4xl leading-[1.02] font-extrabold tracking-tight text-titulo outline-none sm:text-5xl">
+        {title} {highlight && <Highlight isDrawnOnLoad>{highlight}</Highlight>}
       </h1>
-      {children && <p className="mt-3 text-grafito-600">{children}</p>}
+      {children && <p className="mt-4 text-lg text-grafito-600">{children}</p>}
     </div>
   )
 }

@@ -138,18 +138,30 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
   existe en Mi cuenta. Celular: barra superior + barra inferior con las 5 secciones.
 - Archivos y grabaciones son contenido pagado: los botones (`ui/DemoAction.tsx`) muestran un aviso en vez de abrir.
   El buzón guarda los mensajes solo en memoria de la pantalla.
+- Estilo (rediseño del 2026-11-04, "se veía muy simple"): las mismas piezas de la landing en cada página.
+  Inicio: portada azul con los 7 días de la semana en óvalos y dos notas pegadas; cada curso con su sello de color por
+  bloque (`CursoSello`, abreviatura en `cursos.ts`). Clases: cartilla clara con óvalos de semana y fichas por curso.
+  Simulacros: boleta con composición del puntaje, puesto en el salón (41 óvalos) y en el área; la pieza oscura de la
+  meta (`MetaCard` + `Regla`). Sede: tarjeta oscura con la dirección y boleta de matrícula. Ayuda: preguntas numeradas,
+  tarjeta oscura de contacto y el buzón como hoja de cartilla. Mi cuenta: ficha de alumno con foto.
+- Foto de perfil editable en Mi cuenta (`src/intranet/fotoPerfil.ts`): JPG, PNG o WebP de hasta 8 MB; se recorta al
+  centro y se reduce a 256 × 256 en el navegador. En la demo se guarda solo en `localStorage` de ese navegador y se
+  borra al cerrar sesión; sale en la ficha, la barra lateral y la barra de celular (`ui/Avatar.tsx`).
 
 | Carpeta | Qué hay |
 |---|---|
 | `src/intranet/content/` | Cursos, semanas (separatas + grabaciones), simulacros, contacto de sede y ayuda: reales, con fuente. `alumno.ts`: alumna y notas **de ejemplo**, marcadas así en pantalla |
 | `src/intranet/lib/` | `ciclo.ts` (semana actual, une separata + grabación por curso, avance a la meta), `fechas.ts` (rangos, puntajes `1058.5`), `semanas.ts`. Con pruebas |
 | `src/intranet/layout/` | Marco (barra lateral tinta, barras de celular, franja "Demostración"), `PageHeader`, aviso de demo |
-| `src/intranet/ui/` | `Panel` (hoja), `OvaloRadio` (óvalo de la cartilla), `MetaBar` (regla del puntaje), `DemoAction`, `Etiqueta` |
+| `src/intranet/ui/` | `Panel` (hoja), `Cuadernillo` (examen), `MetaCard` + `Regla` (meta y puntaje), `SemanaOvalos`, `CursoSello` + `bloques.ts` (color por bloque), `Avatar`, `OvaloRadio`, `DemoAction`, `Etiqueta` |
+| `src/intranet/intranet.css` | Piezas propias: óvalos de días, cinta y notas pegadas |
 | `src/intranet/pages/` | Una página por ruta |
 
 ### Verificado
 
 - axe sin violaciones en las 7 rutas, en claro y en oscuro (con los `<details>` abiertos). Sin scroll horizontal a 375 px.
+- Tras el rediseño: axe sin violaciones en las 6 páginas internas en claro y oscuro; sin scroll horizontal en escritorio
+  ni en celular. Foto: subir (recorte 256 × 256), archivo que no es imagen (mensaje de error), quitar.
 - En modo oscuro el resaltador sigue siendo resaltador dentro de `.hoja-clara` (antes salía menta sobre blanco).
 
 ### Pendiente
