@@ -16,8 +16,8 @@ import { Panel } from '../ui/Panel'
 export function CuentaPage() {
   const navigate = useNavigate()
 
+  // La foto no se borra al salir: es de la cuenta, no de la sesión (se quita con "Quitar foto").
   const handleSignOut = () => {
-    setFotoPerfil(null)
     signOut()
     navigate('/entrar', { replace: true })
   }

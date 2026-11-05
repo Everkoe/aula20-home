@@ -146,8 +146,9 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
   meta (`MetaCard` + `Regla`). Sede: tarjeta oscura con la dirección y boleta de matrícula. Ayuda: preguntas numeradas,
   tarjeta oscura de contacto y el buzón como hoja de cartilla. Mi cuenta: ficha de alumno con foto.
 - Foto de perfil editable en Mi cuenta (`src/intranet/fotoPerfil.ts`): JPG, PNG o WebP de hasta 8 MB; se recorta al
-  centro y se reduce a 256 × 256 en el navegador. En la demo se guarda solo en `localStorage` de ese navegador y se
-  borra al cerrar sesión; sale en la ficha, la barra lateral y la barra de celular (`ui/Avatar.tsx`).
+  centro y se reduce a 256 × 256 en el navegador. En la demo se guarda en `localStorage` de ese navegador y se queda
+  aunque cierres sesión (solo se va con "Quitar foto" o borrando los datos del sitio). No pasa a otro navegador ni de
+  `localhost` a Vercel: para eso hace falta un backend. Sale en la ficha, la barra lateral y la de celular (`ui/Avatar.tsx`).
 
 | Carpeta | Qué hay |
 |---|---|
