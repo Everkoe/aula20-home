@@ -58,10 +58,27 @@ export const cartilla = {
   pickedLabel: 'Marcaste',
   ciclosCount: (count: number) => `${count} ${count === 1 ? 'ciclo' : 'ciclos'}`,
   jumpCta: 'Ver ciclos',
-  detailsCta: 'Ver detalles',
+  detailsCta: 'Ver ficha',
   askCta: 'Consultar por WhatsApp',
   askMessage: (label: string) => `¡Hola! Quiero información de los ciclos ${label} de Aula 20. Vengo desde la web.`,
-  featuredLabel: 'Ficha del ciclo',
+  ficha: {
+    label: 'Ficha del ciclo',
+    close: 'Cerrar ficha',
+    facts: { inicio: 'Inicio', fin: 'Fin', duracion: 'Duración', modalidad: 'Modalidad' },
+    metodologia: 'Metodología',
+    horario: 'Horario semanal',
+    turno: 'Turno',
+    simulacro: 'Simulacro',
+    clases: 'Clases',
+    beneficios: 'Beneficios',
+    logros: 'Logros',
+    ask: 'Consultar este ciclo',
+    precios: 'Precios (PDF)',
+    horarioPdf: 'Horario (PDF)',
+    pagina: 'Ficha en aula20.edu.pe',
+    askMessage: (ciclo: string, opcion: string) =>
+      `¡Hola! Quiero información del ciclo ${ciclo} (${opcion}) de Aula 20. Vengo desde la web.`,
+  },
 }
 
 /** /nosotros (misión, visión, "¿Por qué elegirnos?") y beneficios de la ficha del Intensivo San Marcos. */
@@ -78,6 +95,16 @@ export const metodo = {
   docentes: {
     title: 'Plana docente especializada',
     body: 'Más de 20 años de experiencia formando ingresantes.',
+    cta: 'Conoce a la plana docente',
+    dialog: {
+      eyebrow: 'Cómo te preparamos',
+      title: 'Plana docente',
+      close: 'Cerrar plana docente',
+      ramas: 'Ramas',
+      cursos: 'Ir al curso',
+      docentesCount: (count: number) => `${count} ${count === 1 ? 'docente' : 'docentes'}`,
+      fuente: 'Plana en aula20.edu.pe',
+    },
   },
   simulacros: {
     title: 'Simulacros tipo examen de admisión',
@@ -103,6 +130,26 @@ export const cachimbosCopy = {
   title: { lead: 'Ellos ya', highlight: 'ingresaron.' },
   body: 'Los alumnos de nuestras sedes que alcanzaron una vacante. ¡Encuentra a tu compañero y celebra con él!',
   cta: 'Ver todos los cachimbos',
+  pause: 'Pausar el carrusel',
+  play: 'Reanudar el carrusel',
+  directorio: {
+    eyebrow: 'Cachimbos Aula 20',
+    title: 'Admisión UNMSM 2027-I',
+    close: 'Cerrar cachimbos',
+    loading: 'Cargando cachimbos…',
+    search: 'Busca por nombre o carrera',
+    zona: 'Zona',
+    sede: 'Sede',
+    carrera: 'Carrera',
+    todas: 'Todas',
+    todasSedes: 'Todas las sedes',
+    todasCarreras: 'Todas las carreras',
+    limpiar: 'Quitar filtros',
+    count: (n: number) => `${n} ${n === 1 ? 'cachimbo' : 'cachimbos'}`,
+    more: (n: number) => `Ver ${n} más`,
+    empty: 'No hay cachimbos con esos filtros.',
+    fuente: 'Lista en aula20.edu.pe',
+  },
 }
 
 export const sedesCopy = {

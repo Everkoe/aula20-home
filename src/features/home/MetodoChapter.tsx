@@ -1,4 +1,4 @@
-import { ArrowUpRight, Check, ClipboardCheck, UserRoundCheck } from 'lucide-react'
+import { Check, ClipboardCheck, UserRoundCheck } from 'lucide-react'
 import { Container } from '../../components/ui/Container'
 import { SectionHeading } from '../../components/ui/Heading'
 import { PhotoFrame } from '../../components/ui/PhotoFrame'
@@ -6,7 +6,7 @@ import { Reveal } from '../../components/ui/Reveal'
 import { planaDocente, resumenPlana } from '../../content/docentes'
 import { metodo } from '../../content/home'
 import { photos } from '../../content/images'
-import { site } from '../../content/site'
+import { PlanaDocente } from './PlanaDocente'
 
 const plana = resumenPlana(planaDocente)
 
@@ -18,16 +18,16 @@ export function MetodoChapter() {
         <SectionHeading id="titulo-metodo" eyebrow={metodo.eyebrow} title={metodo.title} body={metodo.body} />
 
         <div className="mt-14 grid gap-4 md:grid-cols-6">
-          <Reveal className="md:col-span-6 lg:col-span-4">
+          <Reveal className="md:col-span-6 lg:col-span-4 lg:row-span-2">
             <DocentesCard />
           </Reveal>
           <Reveal index={1} className="md:col-span-3 lg:col-span-2">
             <NivelesCard />
           </Reveal>
-          <Reveal index={2} className="md:col-span-3">
+          <Reveal index={2} className="md:col-span-3 lg:col-span-2">
             <TutorCard />
           </Reveal>
-          <Reveal index={3} className="md:col-span-6 lg:col-span-3">
+          <Reveal index={3} className="md:col-span-6">
             <SimulacrosCard />
           </Reveal>
         </div>
@@ -47,27 +47,33 @@ export function MetodoChapter() {
 
 function DocentesCard() {
   return (
-    <article className="lift grid h-full overflow-hidden rounded-3xl border border-linea bg-papel sm:grid-cols-2">
-      <div className="aspect-[5/3] bg-aula-50 sm:aspect-auto">
-        <PhotoFrame photo={photos.docentes} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 92vw" />
+    // La foto (5:3, tres docentes) va arriba a lo ancho: en una celda lateral la altura del texto la
+    // recortaba hasta dejar solo a la docente del centro. Las áreas pasan a columnas para no alargar la tarjeta.
+    <article className="lift flex h-full flex-col overflow-hidden rounded-3xl border border-linea bg-papel">
+      <div className="aspect-[2/1] overflow-hidden bg-aula-50 lg:aspect-[5/2]">
+        <PhotoFrame photo={photos.docentes} sizes="(min-width: 1024px) 60vw, 92vw" />
       </div>
-      <div className="flex flex-col p-7">
-        <h3 className="text-2xl font-bold text-titulo">{metodo.docentes.title}</h3>
-        <p className="mt-2 text-grafito-600">{metodo.docentes.body}</p>
-        <p className="mt-5 font-display text-4xl font-extrabold text-acento">
-          {plana.docentes} <span className="text-lg font-bold text-titulo">docentes en {plana.cursos} cursos</span>
-        </p>
-        <ul className="mt-4 space-y-1.5 text-sm text-grafito-600">
+      <div className="flex flex-1 flex-col p-7">
+        <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
+          <div className="max-w-sm">
+            <h3 className="text-2xl font-bold text-titulo">{metodo.docentes.title}</h3>
+            <p className="mt-2 text-grafito-600">{metodo.docentes.body}</p>
+          </div>
+          <p className="font-display text-4xl font-extrabold text-acento">
+            {plana.docentes} <span className="text-lg font-bold text-titulo">docentes en {plana.cursos} cursos</span>
+          </p>
+        </div>
+        <dl className="mt-6 grid gap-x-6 gap-y-3 text-sm text-grafito-600 sm:grid-cols-3">
           {planaDocente.map((area) => (
-            <li key={area.area}>
-              <span className="font-bold text-grafito">{area.area}:</span> {area.cursos.map((c) => c.name).join(' · ')}
-            </li>
+            <div key={area.area}>
+              <dt className="font-bold text-grafito">{area.area}</dt>
+              <dd className="mt-0.5">{area.cursos.map((c) => c.name).join(' · ')}</dd>
+            </div>
           ))}
-        </ul>
-        <a href={site.links.docentes} target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center gap-1 pt-5 text-sm font-semibold text-acento hover:underline">
-          Conoce a la plana docente
-          <ArrowUpRight aria-hidden="true" className="size-4" />
-        </a>
+        </dl>
+        <div className="mt-auto pt-5">
+          <PlanaDocente />
+        </div>
       </div>
     </article>
   )
@@ -101,7 +107,7 @@ function NivelesCard() {
   )
 }
 
-/** El "1" grande repite el título como dibujo (aria-hidden) y llena la altura que iguala a la de simulacros. */
+/** El "1" grande repite el título como dibujo (aria-hidden) y llena la altura que le toque en la fila. */
 function TutorCard() {
   return (
     <article className="lift flex h-full flex-col rounded-3xl border border-linea bg-papel p-7">
@@ -123,25 +129,29 @@ function TutorCard() {
   )
 }
 
-/** Las barras son proporcionales a la duración publicada de cada parte (1 h y 2 h). */
+/** Las barras son proporcionales a la duración publicada de cada parte (1 h y 2 h). Desde lg ocupa toda la fila: texto a la izquierda, barras a la derecha. */
 function SimulacrosCard() {
   return (
-    <article className="lift flex h-full flex-col rounded-3xl border border-linea bg-papel p-7">
-      <ClipboardCheck aria-hidden="true" className="size-8 text-acento" />
-      <h3 className="mt-5 text-2xl font-bold text-titulo">{metodo.simulacros.title}</h3>
-      <p className="mt-2 text-grafito-600">{metodo.simulacros.body}</p>
-      <div className="mt-6 flex gap-1.5" aria-hidden="true">
-        <span className="h-3 flex-1 rounded-full bg-menta" />
-        <span className="h-3 flex-2 rounded-full bg-aula" />
+    <article className="lift grid h-full gap-x-12 rounded-3xl border border-linea bg-papel p-7 lg:grid-cols-2 lg:items-end">
+      <div>
+        <ClipboardCheck aria-hidden="true" className="size-8 text-acento" />
+        <h3 className="mt-5 text-2xl font-bold text-titulo">{metodo.simulacros.title}</h3>
+        <p className="mt-2 text-grafito-600">{metodo.simulacros.body}</p>
       </div>
-      <dl className="mt-3 flex gap-1.5 text-sm">
-        {metodo.simulacros.parts.map((part, index) => (
-          <div key={part.label} className={index === 0 ? 'flex-1' : 'flex-2'}>
-            <dt className="font-bold text-titulo">{part.label}</dt>
-            <dd className="text-grafito-600">{part.value}</dd>
-          </div>
-        ))}
-      </dl>
+      <div>
+        <div className="mt-6 flex gap-1.5" aria-hidden="true">
+          <span className="h-3 flex-1 rounded-full bg-menta" />
+          <span className="h-3 flex-2 rounded-full bg-aula" />
+        </div>
+        <dl className="mt-3 flex gap-1.5 text-sm">
+          {metodo.simulacros.parts.map((part, index) => (
+            <div key={part.label} className={index === 0 ? 'flex-1' : 'flex-2'}>
+              <dt className="font-bold text-titulo">{part.label}</dt>
+              <dd className="text-grafito-600">{part.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </article>
   )
 }

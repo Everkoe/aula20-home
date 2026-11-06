@@ -384,20 +384,6 @@ input:focus-visible + .ovalo {
   box-shadow: 0 24px 40px -24px rgb(0 10 59 / 0.35);
 }
 
-/* Recorrido lateral con scroll nativo: se ajusta a cada tarjeta y oculta la barra. */
-.snap-row {
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.snap-row::-webkit-scrollbar {
-  display: none;
-}
-
-.snap-row > * {
-  scroll-snap-align: start;
-}
-
 /* Menú móvil desplegable: altura animada con grid y sin foco cuando está cerrado. */
 .disclosure {
   display: grid;
@@ -417,6 +403,40 @@ input:focus-visible + .ovalo {
 }
 
 .disclosure > * {
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+ * Ficha del ciclo (<dialog> nativo). Hoja centrada que no pasa del alto de la pantalla
+ * y se desplaza por dentro; la página de atrás no se mueve mientras está abierta.
+ * ------------------------------------------------------------------------- */
+.ficha-dialog {
+  width: min(100% - 1.5rem, 46rem);
+  max-width: none;
+  max-height: calc(100dvh - 1.5rem);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 1.75rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 40px 80px -30px rgb(0 10 59 / 0.6);
+}
+
+.ficha-dialog-ancha {
+  width: min(100% - 1.5rem, 68rem);
+}
+
+.ficha-dialog[open] {
+  animation: rise 0.45s var(--ease-suave) both;
+}
+
+.ficha-dialog::backdrop {
+  background: rgb(0 10 59 / 0.7);
+  backdrop-filter: blur(4px);
+}
+
+html:has(.ficha-dialog[open]) {
   overflow: hidden;
 }
 

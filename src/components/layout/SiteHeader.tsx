@@ -31,7 +31,7 @@ export function SiteHeader() {
       onKeyDown={handleKeyDown}
       className="sticky top-0 z-50 border-b border-white/15 bg-aula/95 backdrop-blur-md dark:border-white/10 dark:bg-tinta/90"
     >
-      <Container className="flex h-16 items-center gap-6 lg:h-[4.5rem]">
+      <Container className="flex h-16 items-center gap-6 lg:h-[4.5rem] lg:gap-4 xl:gap-6">
         <a href="#inicio" className="shrink-0 rounded-md">
           <img src={site.logo.light} alt="Aula 20 Academia" width={site.logo.width} height={site.logo.height} className="h-8 w-auto sm:h-9" />
         </a>
@@ -45,7 +45,7 @@ export function SiteHeader() {
                   <a
                     href={item.href}
                     aria-current={isActive ? 'location' : undefined}
-                    className="rounded-full px-3 py-2 text-sm font-medium text-cielo transition-colors hover:bg-white/10 hover:text-white aria-[current]:bg-white/15 aria-[current]:text-white"
+                    className="rounded-full px-2.5 py-2 text-sm font-medium whitespace-nowrap text-cielo transition-colors xl:px-3 hover:bg-white/10 hover:text-white aria-[current]:bg-white/15 aria-[current]:text-white"
                   >
                     {item.label}
                   </a>

@@ -26,7 +26,8 @@ const columns: { title: string; links: FooterLink[] }[] = [
   {
     title: 'Contacto',
     links: [
-      { label: `WhatsApp ${formatPhone(site.contact.phone)}`, href: buildWhatsAppLink(site.contact.phone, site.whatsappMessages.info), isExternal: true },
+      // Espacios de no separación: el número no se parte en dos líneas en la columna angosta.
+      { label: `WhatsApp ${formatPhone(site.contact.phone).replaceAll(' ', ' ')}`, href: buildWhatsAppLink(site.contact.phone, site.whatsappMessages.info), isExternal: true },
       { label: 'Intranet de alumnos', href: site.links.intranet },
       ...site.social.map((s) => ({ label: s.label, href: s.href, isExternal: true })),
     ],

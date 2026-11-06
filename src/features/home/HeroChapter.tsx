@@ -68,7 +68,7 @@ function HeroPhoto() {
         <div className="aspect-[5/3] overflow-hidden rounded-[1.25rem] bg-aula-50">
           <PhotoFrame photo={photos.tutores} isPriority sizes="(min-width: 1024px) 40vw, 92vw" />
         </div>
-        <figcaption className="pt-3 pr-2 pb-1 pl-44 text-right text-xs font-semibold text-grafito-600 sm:pl-2 sm:text-sm">{hero.photoCaption}</figcaption>
+        <figcaption className="pt-3 pr-2 pb-1 pl-44 text-right text-xs font-semibold text-grafito-600 sm:pl-2 sm:text-sm lg:pl-36 xl:pl-2">{hero.photoCaption}</figcaption>
       </figure>
 
       <div className="absolute -bottom-10 -left-2 rotate-3 rounded-2xl bg-white px-5 py-4 text-tinta shadow-xl shadow-black/30 sm:-left-8">

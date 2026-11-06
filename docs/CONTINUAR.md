@@ -59,12 +59,31 @@ Para ver la versión compilada (la única con precarga de fuentes): `npm run bui
    con 659 ingresantes y 46 primeros puestos (UNMSM 2027-I) como notas pegadas.
 2. **Franja de universidades** (menta): las 11 opciones en marquesina lenta. Cada nombre marca esa opción en la
    cartilla y baja a ella (el estado vive en `App.tsx`). Botón de pausa; también se detiene con el cursor o el foco.
-3. **Marca tu universidad** (pico): cartilla con radios nativos; al marcar aparecen los ciclos de esa opción y,
-   en San Marcos, la ficha del Intensivo con fechas y horario. Al pie de la hoja, "Marcaste X · N ciclos"
+3. **Marca tu universidad** (pico): cartilla con radios nativos; al marcar aparecen los ciclos de esa opción
+   (fechas, semanas y modalidad en cada fila). Al pie de la hoja, "Marcaste X · N ciclos"
    (aviso para lector de pantalla) y, en celular, "Ver ciclos ↓" hasta el resultado.
+   **Ficha de cada ciclo** (2026-11-05, pedido del usuario): "Ver ficha" abre un `<dialog>` nativo
+   (`features/ciclos/CicloFicha.tsx`, hoja clara en los dos temas) con inicio, fin, duración, modalidad, metodología en
+   gráfico circular (`MetodologiaDonut`, azul práctico / menta teórico, % siempre en texto), horario en una semana
+   lun–dom con los bloques a su hora real y selector de turno (`HorarioSemana`, con la lista en texto debajo),
+   beneficios, logros, WhatsApp con el nombre del ciclo y enlaces a los PDF de precios y horario. Datos de los 19
+   ciclos en `src/content/ciclos.ts`, leídos de los datos que manda cada página /ciclos/…; utilidades en `lib/horario.ts`.
 4. **Cómo te preparamos**: bento con plana docente (58 docentes, 18 cursos), niveles, áreas, tutor y simulacros.
+   **Plana docente** (2026-11-05, pedido del usuario): "Conoce a la plana docente" ya no lleva al sitio; abre una hoja
+   (`features/home/PlanaDocente.tsx`) con una pestaña por rama (Matemáticas, Ciencias, Letras), atajos a cada curso y
+   la foto y el nombre de cada docente, como en /docentes. Las fotos (PNG 500 × 500, ~300 KB c/u) vienen en caliente del
+   CDN y en diferido; solo se pinta la rama elegida. La ficha del ciclo y esta hoja comparten `components/ui/HojaDialog`.
 5. **Resultados** (tinta): cifras 2027-I y 2026-II que cuentan al entrar.
-6. **Cachimbos**: carrusel con scroll nativo y botones; puesto, carrera y nombre en texto.
+6. **Cachimbos**: carrusel de primeros puestos **uno por vez** (`CachimbosCarrusel.tsx`, elegido por el usuario el
+   2026-11-05 en lugar de la fila de tarjetas): pieza a la izquierda y puesto, carrera y nombre en texto a la derecha;
+   flechas (da la vuelta), puntos (desde 640 px), flechas del teclado y deslizar con el dedo. Avanza cada 5 s con botón
+   de pausa (WCAG 2.2.2); se detiene con el cursor, el foco o fuera de pantalla y no arranca con "reducir movimiento".
+   Mientras rota no se anuncia (`aria-live="off"`); las diapositivas ocultas llevan `inert`.
+   **Directorio** (2026-11-05, pedido del usuario): "Ver todos los cachimbos" abre una hoja ancha (`CachimbosDirectorio.tsx`,
+   import dinámico, ~17 KB gzip) con los 403 de aula20.edu.pe/cachimbos/unmsm/2027-1: buscador por nombre o carrera,
+   zona (Norte, Este, Centro, Sur, Virtual), sede y carrera encadenadas, tandas de 24 piezas en diferido (~70 KB c/u).
+   Datos en `src/content/cachimbosUnmsm2027.ts`, generados una vez desde el `data-page` de esa URL.
+   `formatCarrera` (lib/format.ts) pone las tildes que el listado no trae y la filial entre paréntesis ("(SJL)").
 7. **Sedes**: pestañas por zona con flechas/Home/End; dirección, referencia y "Cómo llegar".
 8. **Cierre** (azul): "Tu futuro comienza con una decisión." + WhatsApp, teléfono y horario.
 
@@ -101,17 +120,27 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
   El prototipo muestra las 17 de /sedes.
 - **"33 % cachimbos de Medicina Humana"**: redacción exacta. Se muestra como en su banner.
 - **Inicio del Intensivo San Marcos**: la web dice 19/10/2026; un banner dice "Inicio: Nov. 0…".
-- **Precios**: solo están en PDF; el prototipo no muestra precios.
+- **Precios**: solo están en PDF; el prototipo no muestra precios (la ficha enlaza el PDF de cada ciclo).
+- **Horario de Beca 18, virtual mañana**: la web dice "Viernes: (9:00 pm - 10:45 am)"; la ficha muestra 9:00 a. m.
+  También se leyó "Lunes - Miércoles" como lunes y miércoles (como "Martes - Jueves" en Escolar Kids).
+- **Logros en las fichas**: todas (también UNI, Católica, Beca 18, Escolar Kids) publican los de UNMSM 2026-II
+  (130 primeros puestos, 1311 cachimbos). Se muestran así, con el nombre del proceso.
+- **Intensivo San Marcos, turno noche**: el simulacro del domingo no tiene hora publicada.
+- **Cachimbos 2027-I**: un registro no tiene carrera ("Carrera no publicada") y uno no trae nombre en formato
+  "Apellidos, Nombres". El listado publica "Cadena de Sumistro"; se muestra "Suministro".
+- **Modalidad**: CEPRE San Marcos y Semianual Villarreal son solo presenciales; Escolar Kids, solo virtual
+  (antes el prototipo decía "Presencial y virtual" para todos).
 
 ## 8. Pendientes y deuda conocida
 
-- Las fotos y flyers se cargan **en caliente desde `cdn.aula20.edu.pe`** (provisional). Con el material propio,
+- Las fotos y flyers se cargan **en caliente desde `cdn.aula20.edu.pe`** (provisional). Las 58 fotos de docentes
+  son PNG de ~300 KB: al pasarlas a `public/`, convertirlas a WebP de ~400 px. Con el material propio,
   pasarlas a `public/` optimizadas.
 - Los flyers de cachimbos traen texto dentro de la imagen; lo ideal son retratos sin texto (ver "Material que
   debe aportar Aula 20" en el brief).
 - Falta el **logo bicolor** ("Aula" blanco + "20" menta). El sitio solo publica la versión blanca y la azul
   (`/build/assets/logo-xeVVxgm4.svg` y `/build/assets/logoSecond-C-VtVEB5.svg`), ambas de un color.
-- La foto de la plana docente se recorta a los lados en la celda alta del bento (tablet).
+- (Resuelto 2026-11-05) La foto de la plana docente se recortaba a los lados (solo se veía a la docente del centro, también a 1024 px): ahora va arriba a lo ancho (2:1, 5:2 desde lg) y las áreas en tres columnas.
 - Las pruebas cubren `src/lib` y la integridad de `src/content`; los componentes no tienen pruebas.
 - La imagen de vista previa (`og:image`) es la foto del hero en WebP 1500×900. Para WhatsApp y Facebook conviene
   una JPG de 1200×630 hecha a propósito.
