@@ -1,10 +1,11 @@
-import { useRef, useState, type CSSProperties, type KeyboardEvent } from 'react'
-import { CountUp } from '../../components/ui/CountUp'
+import { useState, type CSSProperties } from 'react'
 import type { NotaSimulacro } from '../content/alumno'
 import type { Bloque } from '../content/cursos'
 import { formatPuntaje } from '../lib/fechas'
 import { nombreSemana } from '../lib/semanas'
 import { colorBloque } from './bloques'
+import { Pestanas } from './Pestanas'
+import { Recuento } from './Recuento'
 
 /** Columnas de notas de la intranet, en su orden, con el bloque que da el color. */
 const COLUMNAS: { key: keyof NotaSimulacro['bloques']; label: string; bloque: Bloque }[] = [
@@ -27,20 +28,10 @@ type Props = {
  */
 export function BloquesChart({ id, notas }: Props) {
   const [index, setIndex] = useState(Math.max(0, notas.length - 1))
-  const tabsRef = useRef<HTMLDivElement>(null)
   const nota = notas[index]
   const comparada = notas[index === notas.length - 1 ? index - 1 : index + 1]
   const max = Math.max(1, ...notas.flatMap((n) => Object.values(n.bloques)))
   if (!nota) return null
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const paso = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0
-    if (!paso) return
-    event.preventDefault()
-    const next = (index + paso + notas.length) % notas.length
-    setIndex(next)
-    tabsRef.current?.querySelectorAll<HTMLButtonElement>('[role=tab]')[next]?.focus()
-  }
 
   return (
     <section aria-labelledby={id} className="entrada min-w-0 rounded-3xl border border-linea bg-hoja p-5 sm:p-7" style={{ '--i': 4 } as CSSProperties}>
@@ -52,36 +43,12 @@ export function BloquesChart({ id, notas }: Props) {
           <p className="mt-0.5 text-sm text-grafito-600">
             Total{' '}
             <strong className="font-display text-base font-extrabold text-titulo tabular-nums">
-              <CountUp key={index} to={nota.total} decimals={1} isGrouped={false} />
+              <Recuento value={nota.total} decimals={1} isGrouped={false} />
             </strong>
             {comparada && <> · en gris, {nombreSemana(comparada.semanaId)}</>}
           </p>
         </div>
-        <div
-          ref={tabsRef}
-          role="tablist"
-          aria-label="Simulacro"
-          onKeyDown={handleKeyDown}
-          style={{ '--n': notas.length, '--sel': index } as CSSProperties}
-          className="relative grid auto-cols-fr grid-flow-col rounded-full bg-papel p-1"
-        >
-          <span aria-hidden="true" className="pastilla absolute inset-y-1 left-1 rounded-full bg-aula shadow-sm" />
-          {notas.map((n, i) => (
-            <button
-              key={n.semanaId}
-              type="button"
-              role="tab"
-              id={`${id}-tab-${i}`}
-              aria-selected={i === index}
-              aria-controls={`${id}-panel`}
-              tabIndex={i === index ? 0 : -1}
-              onClick={() => setIndex(i)}
-              className="relative min-h-9 rounded-full px-3.5 text-sm font-semibold whitespace-nowrap text-grafito transition-colors duration-300 aria-selected:text-white"
-            >
-              {nombreSemana(n.semanaId)}
-            </button>
-          ))}
-        </div>
+        <Pestanas id={id} label="Simulacro" options={notas.map((n) => nombreSemana(n.semanaId))} selected={index} onSelect={setIndex} controls={`${id}-panel`} />
       </div>
 
       <div id={`${id}-panel`} role="tabpanel" aria-labelledby={`${id}-tab-${index}`} className="mt-6">

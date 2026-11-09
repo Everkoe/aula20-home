@@ -184,6 +184,13 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
   simulacro. Las cifras cuentan al entrar (`CountUp` ahora acepta decimales) y las tarjetas entran en cascada una vez
   (`.entrada` en intranet.css); todo se apaga con "reducir movimiento". Si hoy ya pasó la última semana publicada,
   la frase lo dice ("la última publicada").
+- **Simulacros y Clases con el mismo movimiento** (2026-11-09). Piezas compartidas en `src/intranet/ui/`: `Pestanas`
+  (selector segmentado con pastilla, flechas/Inicio/Fin), `Recuento` (cifra que recuenta desde la anterior; escribe
+  el texto en el DOM, sin re-render por fotograma) y `useFlip` (fichas que se deslizan a su nuevo sitio y entran con
+  fundido). Simulacros: la boleta tiene selector de simulacro; total, bloques y puestos recuentan, la barra de
+  composición y la marca del área se mueven, y cada bloque muestra cuánto subió frente al anterior. Clases: el filtro
+  por bloque tiene una pastilla tinta que se mide sobre el chip elegido (los chips pueden ir en dos líneas) y las
+  fichas usan FLIP al filtrar o cambiar de semana; los contadores recuentan. El gráfico del Inicio usa las mismas piezas.
 - Foto de perfil editable en Mi cuenta (`src/intranet/fotoPerfil.ts`): JPG, PNG o WebP de hasta 8 MB; se recorta al
   centro y se reduce a 256 × 256 en el navegador. En la demo se guarda en `localStorage` de ese navegador y se queda
   aunque cierres sesión (solo se va con "Quitar foto" o borrando los datos del sitio). No pasa a otro navegador ni de

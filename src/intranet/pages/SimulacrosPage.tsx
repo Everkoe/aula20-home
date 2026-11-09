@@ -1,5 +1,5 @@
-import { FileCheck2, FileText, NotebookPen, TrendingUp } from 'lucide-react'
-import { useState } from 'react'
+import { FileCheck2, FileText, NotebookPen } from 'lucide-react'
+import { useState, type CSSProperties } from 'react'
 import { alumno, notasDemo, type NotaSimulacro } from '../content/alumno'
 import { areasUnmsm, partesExamen, simulacros, type AreaUnmsm, type Simulacro } from '../content/simulacros'
 import { PageHeader } from '../layout/PageHeader'
@@ -10,6 +10,9 @@ import { colorBloque } from '../ui/bloques'
 import { Cuadernillo } from '../ui/Cuadernillo'
 import { DemoAction } from '../ui/DemoAction'
 import { Etiqueta } from '../ui/Etiqueta'
+import { Delta } from '../ui/Kpi'
+import { Pestanas } from '../ui/Pestanas'
+import { Recuento } from '../ui/Recuento'
 import { MetaCard } from '../ui/MetaCard'
 import { Panel } from '../ui/Panel'
 
@@ -34,25 +37,27 @@ export function SimulacrosPage() {
   const actual = semanaEnCurso
   const hasSimulacroActual = simulacros.some((s) => s.semanaId === actual?.id)
   const publicados = [...simulacros].reverse()
-  const ultima = notasDemo.at(-1)
+  // Simulacro que muestra la boleta: el último, de entrada.
+  const [notaIndex, setNotaIndex] = useState(notasDemo.length - 1)
+  const nota = notasDemo[notaIndex]
 
   return (
     <>
       <PageHeader eyebrow={`Área ${meta.area} · ${areasUnmsm[meta.area]}`} title="Tus" highlight="simulacros." />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_23rem] lg:items-start">
-        {ultima ? (
-          <Boleta nota={ultima} anterior={notasDemo.at(-2)} />
+        {nota ? (
+          <Boleta nota={nota} anterior={notasDemo[notaIndex - 1]} index={notaIndex} onSelect={setNotaIndex} />
         ) : (
           <Panel id="simulacros-boleta" title="Tu último resultado">
             <p className="mt-3 text-grafito-600">Aún no tienes simulacros calificados.</p>
           </Panel>
         )}
-        <MetaCard id="simulacros-meta" hasLink={false} />
+        <MetaCard id="simulacros-meta" hasLink={false} className="entrada [--i:1]" />
       </div>
 
       {notasDemo.length > 0 && (
-        <Panel id="simulacros-historial" title="Todos tus simulacros" aside={<Etiqueta>Ejemplo</Etiqueta>} className="mt-6">
+        <Panel id="simulacros-historial" title="Todos tus simulacros" aside={<Etiqueta>Ejemplo</Etiqueta>} className="entrada mt-6 [--i:2]">
           <TablaNotas notas={notasDemo} />
         </Panel>
       )}
@@ -72,57 +77,77 @@ export function SimulacrosPage() {
   )
 }
 
-/** Boleta del último simulacro: el total grande, cómo se arma y en qué puesto quedaste. */
-function Boleta({ nota, anterior }: { nota: NotaSimulacro; anterior?: NotaSimulacro }) {
+type BoletaProps = {
+  nota: NotaSimulacro
+  anterior?: NotaSimulacro
+  /** Simulacro elegido en el selector (índice en notasDemo). */
+  index: number
+  onSelect: (index: number) => void
+}
+
+/**
+ * Boleta de un simulacro (el último, de entrada): el total grande, cómo se arma y en qué puesto quedaste.
+ * Al elegir otro en el selector, las cifras recuentan, la barra se reacomoda y los puestos se mueven.
+ */
+function Boleta({ nota, anterior, index, onSelect }: BoletaProps) {
   const semana = nombreSemana(nota.semanaId)
   const cambio = anterior ? cambioEntre(anterior, nota) : null
   const fecha = fechaDe(nota.semanaId)
+  const isUltimo = index === notasDemo.length - 1
+  const hasSelector = notasDemo.length > 1
+  const panelId = 'simulacros-boleta-panel'
 
   return (
-    <section aria-labelledby="simulacros-boleta" className="min-w-0 rounded-3xl border border-linea bg-hoja p-5 sm:p-7">
-      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+    <section aria-labelledby="simulacros-boleta" style={{ '--i': 0 } as CSSProperties} className="entrada min-w-0 rounded-3xl border border-linea bg-hoja p-5 sm:p-7">
+      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-3">
         <div>
-          <p className="text-xs font-bold tracking-[0.2em] text-acento uppercase">Último resultado</p>
+          <p className="flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-acento uppercase">
+            {isUltimo ? 'Último resultado' : 'Resultado anterior'}
+            <Etiqueta>Ejemplo</Etiqueta>
+          </p>
           <h2 id="simulacros-boleta" className="mt-1 text-2xl font-extrabold tracking-tight text-titulo">
             Simulacro de la {semana}
           </h2>
           {fecha && <p className="text-sm text-grafito-600">{fecha}</p>}
         </div>
-        <Etiqueta>Ejemplo</Etiqueta>
-      </div>
-
-      <div className="mt-6 flex flex-wrap items-end gap-x-4 gap-y-2">
-        <p className="font-display text-7xl leading-[0.8] font-extrabold tracking-tight text-titulo">
-          {formatPuntaje(nota.total)}
-          <span className="ml-2 text-base font-bold tracking-normal text-grafito-600">puntos</span>
-        </p>
-        {cambio && anterior && cambio.puntos !== 0 && (
-          <p className="mb-1 inline-flex items-center gap-1.5 rounded-full bg-menta px-3 py-1 text-sm font-bold text-tinta">
-            <TrendingUp aria-hidden="true" className={`size-4 ${cambio.puntos < 0 ? '-scale-y-100' : ''}`} />
-            {cambio.puntos > 0 ? '+' : ''}
-            {formatPuntaje(cambio.puntos)} desde {nombreSemana(anterior.semanaId)}
-          </p>
+        {hasSelector && (
+          <Pestanas id="simulacros-boleta" label="Simulacro" options={notasDemo.map((n) => nombreSemana(n.semanaId))} selected={index} onSelect={onSelect} controls={panelId} />
         )}
       </div>
 
-      <Composicion nota={nota} />
+      <div id={panelId} role={hasSelector ? 'tabpanel' : undefined} aria-labelledby={hasSelector ? `simulacros-boleta-tab-${index}` : undefined}>
+        <div className="mt-6 flex flex-wrap items-end gap-x-4 gap-y-2">
+          <p className="font-display text-7xl leading-[0.8] font-extrabold tracking-tight text-titulo">
+            <Recuento value={nota.total} decimals={1} isGrouped={false} />
+            <span className="ml-2 text-base font-bold tracking-normal text-grafito-600">puntos</span>
+          </p>
+          {cambio && anterior && cambio.puntos !== 0 && (
+            <p className="mb-1 flex items-center gap-2 text-sm text-grafito-600">
+              <Delta value={cambio.puntos} unit="pts" format={formatPuntaje} />
+              desde {nombreSemana(anterior.semanaId)}
+            </p>
+          )}
+        </div>
 
-      <div className="mt-7 grid gap-6 border-t border-dashed border-linea pt-6 sm:grid-cols-2">
-        <PuestoSalon nota={nota} subio={cambio?.puestosSalon ?? 0} />
-        <PuestoArea nota={nota} />
+        <Composicion nota={nota} anterior={anterior} />
+
+        <div className="mt-7 grid gap-6 border-t border-dashed border-linea pt-6 sm:grid-cols-2">
+          <PuestoSalon nota={nota} subio={cambio?.puestosSalon ?? 0} />
+          <PuestoArea nota={nota} />
+        </div>
       </div>
     </section>
   )
 }
 
-/** Barra apilada: cuánto aporta cada bloque al total (los bloques suman el total). */
-function Composicion({ nota }: { nota: NotaSimulacro }) {
+/** Barra apilada: cuánto aporta cada bloque al total (los bloques suman el total) y cuánto cambió cada uno. */
+function Composicion({ nota, anterior }: { nota: NotaSimulacro; anterior?: NotaSimulacro }) {
   return (
     <div className="mt-7">
       <h3 className="text-sm font-bold text-titulo">Cómo se arma tu puntaje</h3>
       <div aria-hidden="true" className="mt-3 flex h-4 gap-0.5 overflow-hidden rounded-full">
         {columnas.map((c) => (
-          <span key={c.key} className={c.color} style={{ width: `${(nota.bloques[c.key] / nota.total) * 100}%` }} />
+          <span key={c.key} className={`${c.color} transition-[width] duration-500 ease-out`} style={{ width: `${(nota.bloques[c.key] / nota.total) * 100}%` }} />
         ))}
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-5">
@@ -132,11 +157,27 @@ function Composicion({ nota }: { nota: NotaSimulacro }) {
               <span aria-hidden="true" className={`size-2.5 rounded-full ring-1 ring-tinta/15 ${c.color}`} />
               {'title' in c ? c.title : c.label}
             </dt>
-            <dd className="font-display text-xl font-extrabold text-titulo tabular-nums">{formatPuntaje(nota.bloques[c.key])}</dd>
+            <dd className="font-display text-xl font-extrabold text-titulo">
+              <Recuento value={nota.bloques[c.key]} decimals={1} isGrouped={false} />
+              {anterior && <CambioBloque puntos={nota.bloques[c.key] - anterior.bloques[c.key]} />}
+            </dd>
           </div>
         ))}
       </dl>
     </div>
+  )
+}
+
+/** Cambio de un bloque frente al simulacro anterior, en texto chico junto a la cifra. */
+function CambioBloque({ puntos }: { puntos: number }) {
+  const redondeado = Math.round(puntos * 10) / 10
+  if (redondeado === 0) return null
+  return (
+    <span className="ml-1.5 align-middle font-sans text-xs font-bold text-grafito-600">
+      <span aria-hidden="true">{redondeado > 0 ? '↑' : '↓'}</span>
+      <span className="sr-only">{redondeado > 0 ? ' subió ' : ' bajó '}</span>
+      {formatPuntaje(Math.abs(redondeado))}
+    </span>
   )
 }
 
@@ -146,13 +187,13 @@ function PuestoSalon({ nota, subio }: { nota: NotaSimulacro; subio: number }) {
     <div>
       <h3 className="text-sm font-bold text-titulo">En tu salón</h3>
       <p className="mt-1 font-display text-3xl font-extrabold text-titulo">
-        {nota.puestoSalon}.º <span className="text-base font-bold text-grafito-600">de {nota.alumnosSalon}</span>
+        <Recuento value={nota.puestoSalon} />.º <span className="text-base font-bold text-grafito-600">de {nota.alumnosSalon}</span>
       </p>
       <ol aria-hidden="true" className="mt-3 flex flex-wrap gap-1">
         {Array.from({ length: nota.alumnosSalon }, (_, i) => (
           <li
             key={i}
-            className={`h-2.5 w-4 rounded-full border-[1.5px] ${i + 1 === nota.puestoSalon ? 'border-acento bg-acento' : 'border-grafito-600/35'}`}
+            className={`h-2.5 w-4 rounded-full border-[1.5px] transition-colors duration-300 ${i + 1 === nota.puestoSalon ? 'border-acento bg-acento' : 'border-grafito-600/35'}`}
           />
         ))}
       </ol>
@@ -172,11 +213,11 @@ function PuestoArea({ nota }: { nota: NotaSimulacro }) {
     <div>
       <h3 className="text-sm font-bold text-titulo">En el área {alumno.meta.area}</h3>
       <p className="mt-1 font-display text-3xl font-extrabold text-titulo">
-        {nota.puestoArea}.º <span className="text-base font-bold text-grafito-600">de {nota.alumnosArea}</span>
+        <Recuento value={nota.puestoArea} />.º <span className="text-base font-bold text-grafito-600">de {nota.alumnosArea}</span>
       </p>
       <div aria-hidden="true" className="relative mt-5 h-1 rounded-full bg-aula-50">
-        <span className="absolute inset-y-0 left-0 rounded-full bg-acento" style={{ width: `${posicion}%` }} />
-        <span className="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-hoja bg-acento shadow" style={{ left: `${posicion}%` }} />
+        <span className="absolute inset-y-0 left-0 rounded-full bg-acento transition-[width] duration-500 ease-out" style={{ width: `${posicion}%` }} />
+        <span className="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-hoja bg-acento shadow transition-[left] duration-500 ease-out" style={{ left: `${posicion}%` }} />
       </div>
       <p aria-hidden="true" className="mt-2 flex justify-between text-[0.65rem] text-grafito-600 tabular-nums">
         <span>1.º</span>

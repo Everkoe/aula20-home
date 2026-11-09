@@ -1,4 +1,5 @@
 import { FileText, PlayCircle } from 'lucide-react'
+import { useLayoutEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 import { bloques, type Bloque } from '../content/cursos'
 import { semanas, type Semana } from '../content/semanas'
@@ -11,6 +12,8 @@ import { CursoSello } from '../ui/CursoSello'
 import { DemoAction } from '../ui/DemoAction'
 import { Etiqueta } from '../ui/Etiqueta'
 import { OvaloRadio } from '../ui/OvaloRadio'
+import { Recuento } from '../ui/Recuento'
+import { useFlip } from '../ui/useFlip'
 
 type Filtro = Bloque | 'todos'
 type Cuenta = { label: string; value: number }
@@ -24,6 +27,7 @@ function isBloque(value: string | null): value is Bloque {
 /** Semana y bloque viven en la URL (?semana=semana-1&bloque=letras): se pueden compartir y sobreviven a recargar. */
 export function ClasesPage() {
   const [params, setParams] = useSearchParams()
+  const listaRef = useRef<HTMLDivElement>(null)
   const semana = semanas.find((s) => s.id === params.get('semana')) ?? semanaEnCurso
   const pedido = params.get('bloque')
   const filtro: Filtro = isBloque(pedido) ? pedido : 'todos'
@@ -39,6 +43,9 @@ export function ClasesPage() {
       { replace: true },
     )
   }
+
+  // Al filtrar o cambiar de semana, las fichas que siguen se deslizan a su sitio y las nuevas entran con un fundido.
+  useFlip(listaRef, `${semana?.id}|${filtro}`)
 
   if (!semana) return <PageHeader title="Clases" />
 
@@ -64,7 +71,9 @@ export function ClasesPage() {
             {cuenta.map(({ label, value }) => (
               <div key={label} className="flex flex-col-reverse">
                 <dt className="text-xs font-semibold text-grafito-600">{label}</dt>
-                <dd className="font-display text-3xl leading-none font-extrabold text-titulo">{value}</dd>
+                <dd className="font-display text-3xl leading-none font-extrabold text-titulo">
+                  <Recuento value={value} />
+                </dd>
               </div>
             ))}
           </dl>
@@ -77,10 +86,10 @@ export function ClasesPage() {
         {resumen(semana, cuenta)}
       </p>
 
-      <div className="mt-10 grid gap-10">
+      <div ref={listaRef} className="mt-10 grid gap-10">
         {grupos.map((g) => (
           <section key={g.bloque} aria-labelledby={`bloque-${g.bloque}`}>
-            <div className="flex items-center gap-3">
+            <div data-flip={`grupo-${g.bloque}`} className="flex items-center gap-3">
               <span aria-hidden="true" className={`h-6 w-1.5 rounded-full ${colorBloque[g.bloque].relleno}`} />
               <h2 id={`bloque-${g.bloque}`} className="text-2xl font-extrabold tracking-tight text-titulo">
                 {bloques[g.bloque]}
@@ -128,15 +137,44 @@ function SemanaPicker({ semanaId, onSelect }: { semanaId: string; onSelect: (id:
 
 const filtros: { value: Filtro; label: string }[] = [{ value: 'todos', label: 'Todos' }, ...ordenBloques.map((b) => ({ value: b, label: bloques[b] }))]
 
+/**
+ * Filtro por bloque: radios nativos con una pastilla tinta que se desliza al elegido. Los chips pueden ocupar
+ * dos líneas en celular, así que la pastilla se coloca midiendo el chip (y se vuelve a medir si cambia el ancho).
+ */
 function BloqueFilter({ filtro, onSelect }: { filtro: Filtro; onSelect: (value: Filtro) => void }) {
+  const grupoRef = useRef<HTMLDivElement>(null)
+  const pastillaRef = useRef<HTMLSpanElement>(null)
+
+  // Posición de la pastilla: medir el DOM y escribir el estilo (no es estado de React).
+  useLayoutEffect(() => {
+    const grupo = grupoRef.current
+    const pastilla = pastillaRef.current
+    if (!grupo || !pastilla) return
+    const colocar = () => {
+      const chip = grupo.querySelector<HTMLElement>(`[data-filtro="${filtro}"]`)
+      if (!chip) return
+      pastilla.style.width = `${chip.offsetWidth}px`
+      pastilla.style.height = `${chip.offsetHeight}px`
+      pastilla.style.transform = `translate(${chip.offsetLeft}px, ${chip.offsetTop}px)`
+    }
+    colocar()
+    // La primera vez aparece en su sitio; desde ahí, se desliza.
+    requestAnimationFrame(() => pastilla.setAttribute('data-lista', ''))
+    const observer = new ResizeObserver(colocar)
+    observer.observe(grupo)
+    return () => observer.disconnect()
+  }, [filtro])
+
   return (
     <fieldset>
       <legend className="sr-only">Cursos de</legend>
-      <div className="flex flex-wrap gap-2">
+      <div ref={grupoRef} className="relative flex flex-wrap gap-2">
+        <span ref={pastillaRef} aria-hidden="true" className="pastilla-libre absolute top-0 left-0 rounded-full bg-titulo" />
         {filtros.map(({ value, label }) => (
           <label
             key={value}
-            className="inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border border-linea bg-hoja px-4 text-sm font-semibold text-grafito transition-colors hover:border-acento has-checked:border-titulo has-checked:bg-titulo has-checked:text-hoja has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-acento"
+            data-filtro={value}
+            className="relative inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border border-linea bg-hoja px-4 text-sm font-semibold text-grafito transition-colors duration-300 hover:border-acento has-checked:border-transparent has-checked:bg-transparent has-checked:text-hoja has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-acento"
           >
             <input type="radio" name="bloque" value={value} checked={filtro === value} onChange={() => onSelect(value)} className="sr-only" />
             {value !== 'todos' && <span aria-hidden="true" className={`size-2.5 rounded-full ring-1 ring-tinta/15 ${colorBloque[value].enHojaClara}`} />}
@@ -152,7 +190,7 @@ function BloqueFilter({ filtro, onSelect }: { filtro: Filtro; onSelect: (value: 
 function FichaCurso({ fila, isEnCurso }: { fila: FilaClase; isEnCurso: boolean }) {
   const { curso, hasSeparata, grabaciones } = fila
   return (
-    <li className="flex gap-4 rounded-3xl border border-linea bg-hoja p-4 sm:p-5">
+    <li data-flip={curso.id} className="flex gap-4 rounded-3xl border border-linea bg-hoja p-4 sm:p-5">
       <CursoSello curso={curso} size="lg" />
       <div className="min-w-0 flex-1">
         <h3 className="text-lg leading-tight font-bold text-titulo">

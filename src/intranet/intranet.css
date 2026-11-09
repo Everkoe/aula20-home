@@ -132,3 +132,10 @@ a.nota:hover {
     animation: none;
   }
 }
+
+/* Pastilla del filtro de Clases: la coloca BloqueFilter midiendo el chip elegido; se desliza desde la 2.ª vez. */
+.pastilla-libre[data-lista] {
+  transition:
+    transform 0.45s var(--ease-suave),
+    width 0.45s var(--ease-suave);
+}
