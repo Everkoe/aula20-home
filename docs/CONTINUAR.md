@@ -73,7 +73,13 @@ Para ver la versión compilada (la única con precarga de fuentes): `npm run bui
    (`features/home/PlanaDocente.tsx`) con una pestaña por rama (Matemáticas, Ciencias, Letras), atajos a cada curso y
    la foto y el nombre de cada docente, como en /docentes. Las fotos (PNG 500 × 500, ~300 KB c/u) vienen en caliente del
    CDN y en diferido; solo se pinta la rama elegida. La ficha del ciclo y esta hoja comparten `components/ui/HojaDialog`.
-5. **Resultados** (tinta): cifras 2027-I y 2026-II que cuentan al entrar.
+5. **Resultados**: cifras 2027-I y 2026-II que cuentan al entrar. Sigue el tema (2026-11-09, "se ve oscuro en modo claro"):
+   `.banda-resultados` es azul claro con cuadrícula y hojas blancas en claro, y la de `.cuadricula-oscura` en oscuro. Cifras
+   alineadas arriba (etiqueta debajo con `order-first` en el `dd`). El panel de ciclos de la cartilla (`CiclosPanel`)
+   también dejó de ser tinta fija: hoja con borde, y su botón usa la variante `primary-hoja` (menta-300 al pasar el cursor).
+   El pie (`SiteFooter`) también sigue el tema: papel con el logo azul (`site.logo.blue`) en claro, azul noche con el blanco
+   en oscuro; columnas de 3/12 para que los enlaces no se partan. Solo la pestaña activa de Sedes queda tinta en los dos
+   temas, a propósito. axe: 0 problemas en claro y oscuro.
 6. **Cachimbos** (`CachimbosFila.tsx`, 2026-11-09): **tarjetas de primeros puestos, 3 por fila** (2 en tableta, 1 en
    celular), cada una con la pieza y debajo puesto, carrera y nombre. Avanzan solas **de a una cada 4 s** con un
    deslizamiento suave; la vuelta no tiene corte (se clonan las 3 primeras al final y se salta a 0 sin animación).
@@ -134,6 +140,8 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
   (antes el prototipo decía "Presencial y virtual" para todos).
 
 ## 8. Pendientes y deuda conocida
+
+- (Resuelto 2026-11-09) Ícono de la pestaña: `index.html` e `intranet/index.html` apuntaban a `aula20.edu.pe/favicon-32x32.png`, que da 404. Ahora usan el ícono oficial "A20" (16, 32, 96, 192 y apple 180 px) copiado de `aula20.edu.pe/favicon/` a `public/favicon/`.
 
 - Las fotos y flyers se cargan **en caliente desde `cdn.aula20.edu.pe`** (provisional). Las 58 fotos de docentes
   son PNG de ~300 KB: al pasarlas a `public/`, convertirlas a WebP de ~400 px. Con el material propio,
@@ -247,3 +255,7 @@ Objetivo del usuario: que la web traiga matrículas y nuevos alumnos, no solo qu
   borde derecho: sale al pasar el cursor (solo en pantallas con cursor), con foco de teclado o al tocar la pestaña;
   se esconde al salir, al tocar fuera o con Escape. Logos de Simple Icons 13.21.0 (CC0) en `components/ui/brandIcons.ts`,
   porque lucide-react ya no trae marcas. Resuelve el punto 8 de la auditoría (la barra fija tapaba tarjetas).
+- **Cambio de tema animado** (2026-11-09, pedido del usuario). `applyThemeAnimated` (`lib/theme.ts`) pone `.cambio-tema` en
+  `<html>` unos 0,5 s: los colores de todo (fondo, texto, bordes, sombras) se funden en vivo en 0,4 s con `ease-in-out`.
+  El ícono de sol/luna entra con un giro corto, solo después de usar el botón. Con "reducir movimiento" es inmediato.
+  Descartado: círculo con transición de vista desde el botón ("brusco", "se queda congelado": esa API anima una foto de la página).

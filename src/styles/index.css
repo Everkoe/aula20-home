@@ -140,7 +140,8 @@
 
   /* Sobre azul o tinta el contorno azul no se ve: pasa a menta (4.4:1 sobre aula, 11.1:1 sobre tinta). */
   /* .sala: superficies tinta sin cuadrícula (barra inferior de la intranet). */
-  :where(header, footer, .sala, .cuadricula-oscura, .cuadricula-azul, .cuadricula-marca) :focus-visible {
+  /* El pie ya no va aquí: desde 2026-11-09 es claro en modo claro y usa el contorno azul por defecto. */
+  :where(header, .sala, .cuadricula-oscura, .cuadricula-azul, .cuadricula-marca) :focus-visible {
     @apply outline-menta;
   }
 
@@ -172,7 +173,8 @@
  * `cuadricula-marca` (portada y cierre) es azul en modo claro y azul noche con brillo en oscuro.
  * ------------------------------------------------------------------------- */
 .cuadricula-oscura,
-:root[data-theme='dark'] .cuadricula-marca {
+:root[data-theme='dark'] .cuadricula-marca,
+:root[data-theme='dark'] .banda-resultados {
   background-color: var(--color-tinta);
   background-image:
     radial-gradient(56rem 32rem at 88% -12%, color-mix(in srgb, var(--color-aula) 55%, transparent), transparent 62%),
@@ -195,6 +197,15 @@
     auto,
     32px 32px,
     32px 32px;
+}
+
+/* Resultados: franja azul clara con cuadrícula en modo claro; en oscuro, la de .cuadricula-oscura (arriba). */
+.banda-resultados {
+  background-color: var(--color-aula-50);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-acento) 8%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-acento) 8%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 .cuadricula-clara {
@@ -378,6 +389,33 @@ input:focus-visible + .ovalo {
   }
 }
 
+/* ---------------------------------------------------------------------------
+ * Cambio de tema (lib/theme.ts → applyThemeAnimated): mientras <html> tiene .cambio-tema
+ * (unos 0,5 s), los colores de todo se funden al tema nuevo en vivo, con una curva pareja.
+ * El !important pisa por un momento las transiciones propias de cada pieza.
+ * ------------------------------------------------------------------------- */
+:root.cambio-tema,
+:root.cambio-tema *,
+:root.cambio-tema *::before,
+:root.cambio-tema *::after {
+  transition-property: background-color, border-color, color, fill, stroke, outline-color, box-shadow !important;
+  transition-duration: 0.4s !important;
+  transition-timing-function: ease-in-out !important;
+  transition-delay: 0s !important;
+}
+
+/* El ícono del botón (sol / luna) entra con un giro corto. */
+.icono-tema {
+  animation: icono-tema 0.4s ease-in-out;
+}
+
+@keyframes icono-tema {
+  from {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.8);
+  }
+}
+
 /* Tarjetas que se elevan al pasar el cursor. */
 .lift {
   transition:
@@ -484,6 +522,10 @@ html:has(.ficha-dialog[open]) {
 
   .marquee [aria-hidden='true'] {
     display: none;
+  }
+
+  .icono-tema {
+    animation: none;
   }
 
   .lift:hover,

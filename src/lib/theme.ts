@@ -32,6 +32,28 @@ export function applyTheme(theme: Theme) {
   }
 }
 
+/** Lo que dura el fundido de colores al cambiar de tema (igual que en index.css, .cambio-tema). */
+export const THEME_FADE_MS = 400
+
+let fadeTimer: number | undefined
+
+/**
+ * Cambia el tema fundiendo los colores en vivo (2026-11-09). El usuario descartó el círculo con transición de vista
+ * ("brusca", "se queda congelado": esa API anima una foto de la página). Aquí solo se activan, por un momento,
+ * transiciones de color en todo (.cambio-tema en index.css); la página sigue viva. Con "reducir movimiento" es inmediato.
+ */
+export function applyThemeAnimated(theme: Theme) {
+  const root = document.documentElement
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    applyTheme(theme)
+    return
+  }
+  window.clearTimeout(fadeTimer)
+  root.classList.add('cambio-tema')
+  applyTheme(theme)
+  fadeTimer = window.setTimeout(() => root.classList.remove('cambio-tema'), THEME_FADE_MS + 100)
+}
+
 /** Avisa cuando cambia el atributo data-theme de <html>, para useSyncExternalStore. */
 export function subscribeTheme(onChange: () => void) {
   const observer = new MutationObserver(onChange)

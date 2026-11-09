@@ -40,18 +40,21 @@ const currentYear = new Date().getFullYear()
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-tinta text-cielo">
-      <Container className="grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-12">
-        <div className="sm:col-span-2 lg:col-span-4">
-          <img src={site.logo.light} alt="Aula 20 Academia" width={site.logo.width} height={site.logo.height} loading="lazy" className="h-10 w-auto" />
+    // Sigue el tema (2026-11-09): papel con logo azul en claro, azul noche con logo blanco en oscuro.
+    <footer className="border-t border-linea bg-papel text-grafito-600 dark:border-white/10">
+      <Container className="grid gap-10 py-16 sm:grid-cols-3 lg:grid-cols-12">
+        <div className="sm:col-span-3 lg:col-span-3">
+          <img src={site.logo.blue} alt="Aula 20 Academia" width={site.logo.width} height={site.logo.height} loading="lazy" className="h-10 w-auto dark:hidden" />
+          <img src={site.logo.light} alt="Aula 20 Academia" width={site.logo.width} height={site.logo.height} loading="lazy" className="hidden h-10 w-auto dark:block" />
           <p className="mt-5 max-w-xs text-sm leading-relaxed">
             Academia preuniversitaria. {sedes.length} sedes en Lima y Callao y clases virtuales para todo el Perú.
           </p>
           <p className="mt-3 text-sm">{site.contact.schedule}</p>
         </div>
         {columns.map((column) => (
-          <nav key={column.title} aria-label={column.title} className="lg:col-span-2 lg:first-of-type:col-start-6">
-            <h2 className="text-xs font-bold tracking-[0.18em] text-white uppercase">{column.title}</h2>
+          // Columnas de 3/12 desde lg: los enlaces largos ("Cómo te preparamos") ya no se parten en dos líneas.
+          <nav key={column.title} aria-label={column.title} className="lg:col-span-3">
+            <h2 className="text-xs font-bold tracking-[0.18em] text-titulo uppercase">{column.title}</h2>
             <ul className="mt-4 space-y-1">
               {column.links.map((link) => (
                 <li key={link.label}>
@@ -59,7 +62,7 @@ export function SiteFooter() {
                     href={link.href}
                     target={link.isExternal ? '_blank' : undefined}
                     rel={link.isExternal ? 'noopener noreferrer' : undefined}
-                    className="inline-flex min-h-9 items-center text-sm transition-colors hover:text-white"
+                    className="inline-flex min-h-9 items-center text-sm transition-colors hover:text-acento"
                   >
                     {link.label}
                   </a>
@@ -69,7 +72,7 @@ export function SiteFooter() {
           </nav>
         ))}
       </Container>
-      <div className="border-t border-white/10">
+      <div className="border-t border-linea dark:border-white/10">
         <Container className="flex flex-col gap-2 py-6 text-xs sm:flex-row sm:justify-between">
           <p>© {currentYear} {site.legalName}. Todos los derechos reservados.</p>
           <p>Propuesta de rediseño · prototipo</p>

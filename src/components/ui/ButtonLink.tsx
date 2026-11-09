@@ -4,6 +4,8 @@ import type { ReactNode } from 'react'
 const variants = {
   /** Menta de marca: la acción principal (matricularse). */
   primary: 'bg-menta text-tinta hover:bg-white shadow-[0_10px_30px_-12px_rgb(33_223_175/0.6)]',
+  /** La misma acción sobre superficies que cambian con el tema (hoja): al pasar el cursor no se vuelve blanco sobre blanco. */
+  'primary-hoja': 'bg-menta text-tinta hover:bg-menta-300 shadow-[0_10px_30px_-12px_rgb(33_223_175/0.6)]',
   /** Azul de marca sobre fondos claros. */
   solid: 'bg-aula text-white hover:bg-aula-700',
   /** Borde claro sobre fondos oscuros. */

@@ -14,6 +14,8 @@ export const site = {
   logo: {
     /** Versión blanca, para fondos oscuros. 582 × 200. */
     light: `${SITE}/build/assets/logo-xeVVxgm4.svg`,
+    /** Versión azul (#002cff), para fondos claros. Mismas proporciones que la blanca. */
+    blue: `${SITE}/build/assets/logoSecond-C-VtVEB5.svg`,
     width: 582,
     height: 200,
   },
