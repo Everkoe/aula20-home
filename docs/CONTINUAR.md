@@ -58,7 +58,7 @@ Para ver la versión compilada (la única con precarga de fuentes): `npm run bui
 1. **Portada** (azul; azul noche con brillo en modo oscuro): H1 con el lema "Tú decides a dónde ingresar.", matrícula por WhatsApp, foto de tutores
    con 659 ingresantes y 46 primeros puestos (UNMSM 2027-I) como notas pegadas.
 2. **Franja de universidades** (menta): las 11 opciones en marquesina lenta. Cada nombre marca esa opción en la
-   cartilla y baja a ella (el estado vive en `App.tsx`). Botón de pausa; también se detiene con el cursor o el foco.
+   cartilla y baja a ella (el estado vive en `App.tsx`). Se detiene con el cursor o el foco; sin botón de pausa (quitado a pedido del usuario el 2026-11-09).
 3. **Marca tu universidad** (pico): cartilla con radios nativos; al marcar aparecen los ciclos de esa opción
    (fechas, semanas y modalidad en cada fila). Al pie de la hoja, "Marcaste X · N ciclos"
    (aviso para lector de pantalla) y, en celular, "Ver ciclos ↓" hasta el resultado.
@@ -74,11 +74,13 @@ Para ver la versión compilada (la única con precarga de fuentes): `npm run bui
    la foto y el nombre de cada docente, como en /docentes. Las fotos (PNG 500 × 500, ~300 KB c/u) vienen en caliente del
    CDN y en diferido; solo se pinta la rama elegida. La ficha del ciclo y esta hoja comparten `components/ui/HojaDialog`.
 5. **Resultados** (tinta): cifras 2027-I y 2026-II que cuentan al entrar.
-6. **Cachimbos**: carrusel de primeros puestos **uno por vez** (`CachimbosCarrusel.tsx`, elegido por el usuario el
-   2026-11-05 en lugar de la fila de tarjetas): pieza a la izquierda y puesto, carrera y nombre en texto a la derecha;
-   flechas (da la vuelta), puntos (desde 640 px), flechas del teclado y deslizar con el dedo. Avanza cada 5 s con botón
-   de pausa (WCAG 2.2.2); se detiene con el cursor, el foco o fuera de pantalla y no arranca con "reducir movimiento".
-   Mientras rota no se anuncia (`aria-live="off"`); las diapositivas ocultas llevan `inert`.
+6. **Cachimbos** (`CachimbosFila.tsx`, 2026-11-09): **tarjetas de primeros puestos, 3 por fila** (2 en tableta, 1 en
+   celular), cada una con la pieza y debajo puesto, carrera y nombre. Avanzan solas **de a una cada 4 s** con un
+   deslizamiento suave; la vuelta no tiene corte (se clonan las 3 primeras al final y se salta a 0 sin animación).
+   Sin flechas, puntos ni pausa; se detienen con el cursor, el foco o fuera de pantalla; en celular se pasan con el dedo.
+   Con "reducir movimiento" no avanzan solas.
+   Descartado por el usuario ese mismo día: franja continua de tarjetas grandes ("se ve raro"), muro con filas de nombres
+   ("mucha bulla"), destacado único + fila de miniaturas debajo ("lo de abajo no me gusta").
    **Directorio** (2026-11-05, pedido del usuario): "Ver todos los cachimbos" abre una hoja ancha (`CachimbosDirectorio.tsx`,
    import dinámico, ~17 KB gzip) con los 403 de aula20.edu.pe/cachimbos/unmsm/2027-1: buscador por nombre o carrera,
    zona (Norte, Este, Centro, Sur, Virtual), sede y carrera encadenadas, tandas de 24 piezas en diferido (~70 KB c/u).
@@ -107,7 +109,7 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
 - Sedes: el `role="tabpanel"` pasó a un `div` que envuelve la lista (antes rompía la semántica de `<ul>`).
 - Cachimbos: el carrusel recibe foco (se mueve con flechas del teclado) y los botones se apagan en cada extremo.
 - Menú móvil: Escape lo cierra y devuelve el foco al botón. El menú marca la sección visible (`aria-current`).
-- Franja: botón de pausa (WCAG 2.2.2), nombres clicables, contorno de foco tinta sobre menta.
+- Franja: nombres clicables (el botón de pausa se quitó el 2026-11-09 a pedido del usuario), contorno de foco tinta sobre menta.
 - Cartilla: el aviso del resultado pasó a un `role="status"` fijo (el panel se vuelve a montar con cada opción y su
   `aria-live` no se anunciaba). En celular, atajo "Ver ciclos ↓".
 - Tarjeta del tutor: "1 tutor por salón" en grande con el trazo menta, en vez del hueco vacío.
@@ -220,3 +222,28 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
 - Eventos: la intranet actual no tiene ninguno; se muestra una línea vacía.
 - Confirmar con Aula 20 qué significan "ABC 1", "ABC 2" y "DE" en Física y Química, y los números de WhatsApp repetidos entre sedes.
 - Si algún día hay backend: sesión con cookie httpOnly, archivos con enlaces firmados y no mandar al navegador la ficha de matrícula.
+
+## 10. Capa de captación (2026-11-09)
+
+Objetivo del usuario: que la web traiga matrículas y nuevos alumnos, no solo que se vea mejor.
+
+- **Medición** (`src/lib/analytics.ts`, con pruebas). Un solo escuchador mide todo clic en WhatsApp o llamar como
+  `generate_lead` con `method` (whatsapp / telefono) y `zona` (sección, `encabezado` o `pie`; se puede forzar con
+  `data-zona`); en Meta va como `Contact`. Marcar una opción en la cartilla o en la franja manda `elegir_universidad`.
+  Todo va a `window.dataLayer`; GA4 y el píxel de Meta solo se cargan si existen `VITE_GA4_ID` / `VITE_META_PIXEL_ID`
+  (ver `.env.example`; IDs validados). No se envía el texto del mensaje ni datos personales.
+  **Pendiente**: pedir a Aula 20 sus IDs y, antes de activar el píxel, un aviso de cookies (Ley 29733).
+- **Para la familia** (`features/home/FamiliasChapter.tsx`, `familias` en `home.ts`), entre Cachimbos y Sedes: hoja ya
+  marcada con tutor, simulacros, notas y puesto en la intranet, grabaciones y material; Escolar Kids (reunión de padres,
+  reporte semanal); términos, reglamento y Libro de Reclamaciones; WhatsApp con mensaje para padres.
+- **Preguntas frecuentes** (`features/home/PreguntasChapter.tsx`, `content/faq.ts`), entre Sedes y el cierre: 8 preguntas
+  con `<details>` nativo; respuestas solo con datos publicados (sin precios) y también como `FAQPage` en schema.org.
+- El pie enlaza las dos secciones nuevas; el menú del encabezado no cambia (no cabe a 1024 px).
+- Se descartó la barra fija de matrícula en celular: el encabezado ya es fijo y muestra "Matricúlate".
+- Verificado: `npm run check` (75 pruebas), eventos en `dataLayer` desde encabezado, familias, preguntas, cierre y pie,
+  375 px sin scroll horizontal, claro y oscuro. No probado: envío real a GA4/Meta (no hay IDs).
+- **Barra de redes escondida** (`components/layout/SocialRail.tsx`, pedido del usuario el 2026-11-09 con captura de la
+  barra del sitio actual). Mismo diseño (píldora clara, íconos en círculos) pero solo asoma una pestaña de 16 px al
+  borde derecho: sale al pasar el cursor (solo en pantallas con cursor), con foco de teclado o al tocar la pestaña;
+  se esconde al salir, al tocar fuera o con Escape. Logos de Simple Icons 13.21.0 (CC0) en `components/ui/brandIcons.ts`,
+  porque lucide-react ya no trae marcas. Resuelve el punto 8 de la auditoría (la barra fija tapaba tarjetas).

@@ -130,8 +130,6 @@ export const cachimbosCopy = {
   title: { lead: 'Ellos ya', highlight: 'ingresaron.' },
   body: 'Los alumnos de nuestras sedes que alcanzaron una vacante. ¡Encuentra a tu compañero y celebra con él!',
   cta: 'Ver todos los cachimbos',
-  pause: 'Pausar el carrusel',
-  play: 'Reanudar el carrusel',
   directorio: {
     eyebrow: 'Cachimbos Aula 20',
     title: 'Admisión UNMSM 2027-I',
@@ -150,6 +148,29 @@ export const cachimbosCopy = {
     empty: 'No hay cachimbos con esos filtros.',
     fuente: 'Lista en aula20.edu.pe',
   },
+}
+
+/**
+ * Para la familia (quien suele pagar la matrícula). Todo sale de lo publicado: tutor por salón (/nosotros y ficha
+ * del Intensivo), simulacros (ficha del Intensivo), notas y puesto (Notas Simulacro y Ranking de la intranet actual),
+ * grabaciones y material por semana (fichas de /ciclos e intranet), y reunión de padres y reporte semanal
+ * (beneficios de Escolar Kids). Los documentos legales son los del pie del sitio actual.
+ */
+export const familias = {
+  eyebrow: 'Para la familia',
+  title: { lead: 'Sabrás cómo va su', highlight: 'preparación.' },
+  body: 'Elegir academia también es una decisión de la familia. Esto es lo que tiene tu hijo o hija desde el primer día, y lo que puedes revisar con él o ella.',
+  sheetTitle: 'Lo que incluye su preparación',
+  items: [
+    { title: 'Un tutor asignado a su salón', body: 'Lo acompaña y orienta durante todo su proceso académico.' },
+    { title: 'Simulacros tipo examen de admisión', body: 'Una hora de aptitudes y dos de conocimientos, para medir su progreso real.' },
+    { title: 'Sus notas y su puesto en la intranet', body: 'Con su cuenta ve la nota de cada simulacro y su puesto en el salón y en su área.' },
+    { title: 'Clases grabadas y material por semana', body: 'Si falta a una clase virtual, la repasa con la grabación y el material de esa semana.' },
+  ],
+  kids: 'En Escolar Kids, además, hay reunión de padres y reporte de notas semanal.',
+  legalTitle: 'Matrícula con reglas claras',
+  cta: 'Hablar con un asesor',
+  askMessage: '¡Hola! Soy padre o madre de un postulante y quiero información de los ciclos de Aula 20. Vengo desde la web.',
 }
 
 export const sedesCopy = {

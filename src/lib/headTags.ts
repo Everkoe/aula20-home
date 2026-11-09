@@ -4,6 +4,7 @@
  * pinta la página, así no se desincronizan, y están en el HTML sin esperar a React.
  * Los imports llevan .ts porque vite.config.ts también carga este archivo (tsconfig.node, módulos de Node).
  */
+import { preguntas } from '../content/faq.ts'
 import { photos } from '../content/images.ts'
 import { sedes } from '../content/sedes.ts'
 import { site } from '../content/site.ts'
@@ -52,6 +53,19 @@ export function buildStructuredData() {
   }
 }
 
+/** Las preguntas frecuentes del home (PreguntasChapter), para buscadores y asistentes de IA. */
+export function buildFaqStructuredData() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: preguntas.map((item) => ({
+      '@type': 'Question',
+      name: item.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: item.respuesta },
+    })),
+  }
+}
+
 /** JSON para un <script> en línea: se escapa "<" para que ningún texto pueda cerrar la etiqueta. */
 export function serializeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
@@ -81,5 +95,6 @@ export function buildHeadTags(): HeadTag[] {
     meta('name', 'twitter:card', 'summary_large_image'),
     { tag: 'link', attrs: { rel: 'preload', as: 'image', href: HERO_PHOTO.src, fetchpriority: 'high' } },
     { tag: 'script', attrs: { type: 'application/ld+json' }, children: serializeJsonLd(buildStructuredData()) },
+    { tag: 'script', attrs: { type: 'application/ld+json' }, children: serializeJsonLd(buildFaqStructuredData()) },
   ]
 }

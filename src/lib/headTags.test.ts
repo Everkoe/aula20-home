@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import { photos } from '../content/images'
 import { sedes } from '../content/sedes'
-import { buildHeadTags, buildStructuredData, serializeJsonLd, splitAddress } from './headTags'
+import { preguntas } from '../content/faq'
+import { buildFaqStructuredData, buildHeadTags, buildStructuredData, serializeJsonLd, splitAddress } from './headTags'
 
 describe('splitAddress', () => {
   test('separa la calle del distrito', () => {
@@ -38,5 +39,19 @@ describe('buildHeadTags', () => {
     const preload = tags.find((t) => t.attrs?.rel === 'preload')
     expect(ogImage?.attrs?.content).toBe(photos.tutores.src)
     expect(preload?.attrs?.href).toBe(photos.tutores.src)
+  })
+})
+
+describe('buildFaqStructuredData', () => {
+  test('lleva cada pregunta del home con su respuesta', () => {
+    const data = buildFaqStructuredData()
+    expect(data['@type']).toBe('FAQPage')
+    expect(data.mainEntity).toHaveLength(preguntas.length)
+    expect(data.mainEntity.every((q) => q.name && q.acceptedAnswer.text)).toBe(true)
+  })
+
+  test('va en el <head> junto al de la organización', () => {
+    const scripts = buildHeadTags().filter((t) => t.attrs?.type === 'application/ld+json')
+    expect(scripts).toHaveLength(2)
   })
 })

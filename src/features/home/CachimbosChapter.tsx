@@ -5,12 +5,12 @@ import { SectionHeading } from '../../components/ui/Heading'
 import { HojaDialog } from '../../components/ui/HojaDialog'
 import { admisionCachimbos } from '../../content/cachimbos'
 import { cachimbosCopy } from '../../content/home'
-import { CachimbosCarrusel } from './CachimbosCarrusel'
+import { CachimbosFila } from './CachimbosFila'
 
 /** Los 403 cachimbos (datos + hoja) se descargan solo al abrir el directorio. */
 const CachimbosDirectorio = lazy(() => import('./CachimbosDirectorio'))
 
-/** Capítulo 6 · cachimbos: carrusel de primeros puestos, uno por vez, y el directorio completo por zona, sede y carrera. */
+/** Capítulo 6 · cachimbos: primeros puestos en tarjetas que avanzan solas (3 por fila) y el directorio completo. */
 export function CachimbosChapter() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [isDirectorioOpen, setIsDirectorioOpen] = useState(false)
@@ -41,7 +41,7 @@ export function CachimbosChapter() {
           </button>
         </div>
 
-        <CachimbosCarrusel />
+        <CachimbosFila />
       </Container>
 
       <HojaDialog

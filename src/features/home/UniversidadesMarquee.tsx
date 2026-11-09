@@ -1,5 +1,3 @@
-import { Pause, Play } from 'lucide-react'
-import { useState } from 'react'
 import { opciones } from '../../content/ciclos'
 
 type Props = {
@@ -9,16 +7,13 @@ type Props = {
 
 /**
  * Franja lenta con las universidades y programas: "a dónde ingresar", de un vistazo.
- * Cada nombre lleva a sus ciclos. Se pausa con el botón (WCAG 2.2.2), al pasar el cursor o al enfocar con teclado.
+ * Cada nombre lleva a sus ciclos. Se detiene al pasar el cursor o al enfocar con teclado, y no se mueve
+ * con "reducir movimiento". Sin botón de pausa (pedido del usuario, 2026-11-09).
  */
 export function UniversidadesMarquee({ onPick }: Props) {
-  const [isPaused, setIsPaused] = useState(false)
-  const handleTogglePause = () => setIsPaused((paused) => !paused)
-  const ToggleIcon = isPaused ? Play : Pause
-
   return (
     <section aria-label="Universidades y programas" className="marquee-host relative overflow-hidden bg-menta py-4 text-tinta">
-      <div className="marquee" data-paused={isPaused}>
+      <div className="marquee">
         {[0, 1].map((copy) => {
           const isCopy = copy === 1
           return (
@@ -41,16 +36,6 @@ export function UniversidadesMarquee({ onPick }: Props) {
           )
         })}
       </div>
-
-      <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-28 bg-linear-to-l from-menta from-45% to-transparent motion-reduce:hidden" />
-      <button
-        type="button"
-        onClick={handleTogglePause}
-        aria-label={isPaused ? 'Reanudar la franja de universidades' : 'Pausar la franja de universidades'}
-        className="absolute top-1/2 right-3 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-tinta text-menta transition-colors hover:bg-aula-700 hover:text-white motion-reduce:hidden sm:right-5"
-      >
-        <ToggleIcon aria-hidden="true" className="size-4 fill-current" />
-      </button>
     </section>
   )
 }

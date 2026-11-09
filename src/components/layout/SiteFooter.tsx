@@ -11,6 +11,8 @@ const columns: { title: string; links: FooterLink[] }[] = [
     title: 'Academia',
     links: [
       ...nav.map((item) => ({ label: item.label, href: item.href })),
+      { label: 'Para la familia', href: '#familias' },
+      { label: 'Preguntas frecuentes', href: '#preguntas' },
       { label: 'Plana docente', href: site.links.docentes, isExternal: true },
       { label: 'Nosotros', href: site.links.nosotros, isExternal: true },
     ],

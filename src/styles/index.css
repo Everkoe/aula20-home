@@ -322,6 +322,15 @@ input:checked + .ovalo {
   transform: rotate(-3deg);
 }
 
+/* Óvalo ya rellenado (hoja de la familia): sin radio detrás, solo el dibujo. */
+.ovalo-marcado::after {
+  clip-path: inset(0 0 0 0 round 9999px);
+}
+
+.ovalo-marcado {
+  transform: rotate(-3deg);
+}
+
 label:hover > .ovalo {
   border-color: var(--color-acento);
 }
@@ -348,19 +357,18 @@ input:focus-visible + .ovalo {
 }
 
 /* ---------------------------------------------------------------------------
- * Franja de universidades en movimiento lento. Se detiene con el botón de pausa,
- * al pasar el cursor o al enfocar un nombre con teclado (no con el clic, que
- * deja el foco puesto). Con "reducir movimiento" queda estática y con ajuste de línea.
+ * Franja de universidades en movimiento lento. Se detiene al pasar el cursor o al
+ * enfocar un nombre con teclado (no con el clic, que deja el foco puesto). Con
+ * "reducir movimiento" queda estática y con ajuste de línea.
  * ------------------------------------------------------------------------- */
 .marquee {
   display: flex;
   width: max-content;
-  animation: marquee 42s linear infinite;
+  animation: marquee var(--marquee-duracion, 42s) linear infinite;
 }
 
 .marquee:hover,
-.marquee:has(:focus-visible),
-.marquee[data-paused='true'] {
+.marquee:has(:focus-visible) {
   animation-play-state: paused;
 }
 
