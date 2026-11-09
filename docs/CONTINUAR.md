@@ -174,6 +174,16 @@ claro y oscuro y **CLS 0** (antes 0.072 por el cambio de fuente). Lo que se camb
   Simulacros: boleta con composición del puntaje, puesto en el salón (41 óvalos) y en el área; la pieza oscura de la
   meta (`MetaCard` + `Regla`). Sede: tarjeta oscura con la dirección y boleta de matrícula. Ayuda: preguntas numeradas,
   tarjeta oscura de contacto y el buzón como hoja de cartilla. Mi cuenta: ficha de alumno con foto.
+- **Inicio como dashboard** (2026-11-09, pedido del usuario con la skill code-and-chill, adaptada a la marca: mismos tokens,
+  fuentes y paleta). La portada resume la semana en una frase con los datos en negrita, y a la derecha (desde 1280 px)
+  va el widget "Hoy": cristal sobre el azul, con el horario real del turno (`lib/hoy.ts`, que lee la ficha pública del
+  Intensivo en `src/content/ciclos.ts`) y el estado "En clase ahora / Hoy tienes clases / Terminaste por hoy / Hoy no
+  hay clases" con lo que viene. Debajo, cuatro KPI (`ui/Kpi.tsx`): último simulacro con su mini gráfico, puesto en el
+  salón y en el área con barra de "superaste a", y clases grabadas por bloque. Luego "Tu puntaje por bloque"
+  (`ui/BloquesChart.tsx`): pestañas por simulacro con pastilla deslizante, barras que se transforman y, en gris, el otro
+  simulacro. Las cifras cuentan al entrar (`CountUp` ahora acepta decimales) y las tarjetas entran en cascada una vez
+  (`.entrada` en intranet.css); todo se apaga con "reducir movimiento". Si hoy ya pasó la última semana publicada,
+  la frase lo dice ("la última publicada").
 - Foto de perfil editable en Mi cuenta (`src/intranet/fotoPerfil.ts`): JPG, PNG o WebP de hasta 8 MB; se recorta al
   centro y se reduce a 256 × 256 en el navegador. En la demo se guarda en `localStorage` de ese navegador y se queda
   aunque cierres sesión (solo se va con "Quitar foto" o borrando los datos del sitio). No pasa a otro navegador ni de

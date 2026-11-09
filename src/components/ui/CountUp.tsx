@@ -1,10 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 
 const DURATION_MS = 1100
-const formatter = new Intl.NumberFormat('es-PE')
+
+type Props = {
+  to: number
+  suffix?: string
+  /** Decimales fijos (puntajes de simulacro: 1). */
+  decimals?: number
+  /** Separador de miles (los puntajes de San Marcos se escriben sin él: 1058.5). */
+  isGrouped?: boolean
+}
 
 /** Número que sube de 0 hasta `to` al entrar en pantalla. Con «reducir movimiento» o sin observer muestra el valor final. */
-export function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
+export function CountUp({ to, suffix = '', decimals = 0, isGrouped = true }: Props) {
+  const formatter = new Intl.NumberFormat('es-PE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: isGrouped })
+  const factor = 10 ** decimals
   const ref = useRef<HTMLSpanElement>(null)
   const [value, setValue] = useState(to)
 
@@ -17,7 +27,7 @@ export function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
       const start = performance.now()
       const tick = (now: number) => {
         const t = Math.min(1, (now - start) / DURATION_MS)
-        setValue(Math.round((1 - (1 - t) ** 3) * to))
+        setValue(Math.round((1 - (1 - t) ** 3) * to * factor) / factor)
         if (t < 1) animation.frame = requestAnimationFrame(tick)
       }
       animation.frame = requestAnimationFrame(tick)
@@ -36,7 +46,7 @@ export function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
       observer.disconnect()
       cancelAnimationFrame(animation.frame)
     }
-  }, [to])
+  }, [to, factor])
 
   // El lector de pantalla lee el valor final una vez; el número que sube es solo visual.
   // (aria-label en un <span> no sirve: no tiene rol y se ignora.)
